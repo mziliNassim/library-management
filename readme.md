@@ -4,7 +4,32 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ---
 
-## 🌟 Fonctionnalités
+## Navigation
+
+- [Fonctionnalités](#fonctionnalités)
+  - [Fonctionnalités Client](#fonctionnalités-client)
+  - [Fonctionnalités Admin](#fonctionnalités-admin)
+- [Technologies Utilisées](#technologies-utilisées)
+  - [Front-End](#front-end)
+  - [Back-End](#back-end)
+  - [Outils](#outils)
+- [Utilisation](#utilisation)
+  - [Prérequis](#prérequis)
+  - [Installation](#installation)
+- [Structure du Projet](#structure-du-projet)
+  - [Back-End](#back-end-1)
+  - [Front-End](#front-end-1)
+- [Documentation de l'API](#documentation-de-lapi)
+  - [Clients](#clients)
+    - [Authentification](#1---authentification)
+    - [Profil](#2---profil)
+    - [CRUD](#3---crud)
+  - [Livres](#livres)
+  - [Emprunts](#emprunts)
+  - [Catégories](#catégories)
+- [Captures d'Écran](#captures-décran)
+
+## Fonctionnalités
 
 ### **Fonctionnalités Client**
 
@@ -33,7 +58,7 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ---
 
-## 🛠️ Technologies Utilisées
+## Technologies Utilisées
 
 ### **Front-End**
 
@@ -52,7 +77,7 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 - **Mongoose** - ODM (Object Data Modeling) pour MongoDB.
 - **JWT (JSON Web Tokens)** - Authentification et autorisation.
 
-### **Autres Outils**
+### **Outils**
 
 - **Postman** - Test des API.
 - **Vite** - Outil de développement rapide pour React.
@@ -60,7 +85,7 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ---
 
-## 🚀 Pour Commencer
+## Utilisation
 
 ### Prérequis
 
@@ -126,7 +151,7 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ---
 
-## 📂 Structure du Projet
+## Structure du Projet
 
 ### Back-End
 
@@ -155,55 +180,57 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ---
 
-## 📄 Documentation de l'API
+## Documentation de l'API
 
 ### **Clients**
 
-- **Authentification**
+#### **_1 - Authentification_**
 
-  - **Inscription** : `POST /api/clients/register`  
-    **Accès** : Public  
-    **Description** : Permet à un nouveau client de s'inscrire.
+- **Inscription** : `POST /api/clients/register`  
+  **Accès** : Public  
+  **Description** : Permet à un nouveau client de s'inscrire.
 
-  - **Connexion** : `POST /api/clients/login`  
-    **Accès** : Public  
-    **Description** : Permet à un client de se connecter.
+- **Connexion** : `POST /api/clients/login`  
+  **Accès** : Public  
+  **Description** : Permet à un client de se connecter.
 
-  - **Déconnexion** : `POST /api/clients/logout`  
-    **Accès** : Client  
-    **Description** : Permet à un client de se déconnecter.
+- **Déconnexion** : `POST /api/clients/logout`  
+  **Accès** : Client  
+  **Description** : Permet à un client de se déconnecter.
 
-- **Profil**
+#### **_2 - Profil_**
 
-  - **Mettre à Jour le Profil** : `PUT /api/clients/profile`  
-    **Accès** : Client  
-    **Description** : Permet à un client de mettre à jour ses informations de profil.
+- **Mettre à Jour le Profil** : `PUT /api/clients/profile`  
+  **Accès** : Client  
+  **Description** : Permet à un client de mettre à jour ses informations de profil.
 
-  - **Obtenir les Détails du Client** : `GET /api/clients/me`  
-    **Accès** : Client  
-    **Description** : Récupère les détails du client connecté.
+- **Obtenir les Détails du Client** : `GET /api/clients/me`  
+  **Accès** : Client  
+  **Description** : Récupère les détails du client connecté.
 
-  - **Obtenir les Emprunts du Client** : `GET /api/clients/emprunts`  
-    **Accès** : Client  
-    **Description** : Récupère tous les emprunts du client connecté.
+- **Obtenir les Emprunts du Client** : `GET /api/clients/emprunts`  
+  **Accès** : Client  
+  **Description** : Récupère tous les emprunts du client connecté.
 
-- **CRUD (Admin uniquement)**
+#### **_3 - CRUD_**
 
-  - **Obtenir Tous les Clients** : `GET /api/clients/`  
-    **Accès** : Admin  
-    **Description** : Récupère la liste de tous les clients (pour les administrateurs).
+- **Obtenir Tous les Clients** : `GET /api/clients/`  
+  **Accès** : Admin  
+  **Description** : Récupère la liste de tous les clients (pour les administrateurs).
 
-  - **Obtenir un Client par ID** : `GET /api/clients/:id`  
-    **Accès** : Admin  
-    **Description** : Récupère les détails d'un client spécifique par son ID.
+- **Obtenir un Client par ID** : `GET /api/clients/:id`  
+  **Accès** : Admin  
+  **Description** : Récupère les détails d'un client spécifique par son ID.
 
-  - **Mettre à Jour un Client** : `PUT /api/clients/:id`  
-    **Accès** : Admin  
-    **Description** : Permet à un administrateur de mettre à jour les informations d'un client.
+- **Mettre à Jour un Client** : `PUT /api/clients/:id`  
+  **Accès** : Admin  
+  **Description** : Permet à un administrateur de mettre à jour les informations d'un client.
 
-  - **Supprimer un Client** : `DELETE /api/clients/:id`  
-    **Accès** : Admin  
-    **Description** : Permet à un administrateur de supprimer un client.
+- **Supprimer un Client** : `DELETE /api/clients/:id`  
+  **Accès** : Admin  
+  **Description** : Permet à un administrateur de supprimer un client.
+
+---
 
 ### **Livres**
 
@@ -226,6 +253,8 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 - **Supprimer un Livre** : `DELETE /api/livres/:id`  
   **Accès** : Admin uniquement  
   **Description** : Permet à un administrateur de supprimer un livre.
+
+---
 
 ### **Emprunts**
 
@@ -257,6 +286,8 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
   **Accès** : Client ou Admin  
   **Description** : Permet de marquer un emprunt comme retourné (rendre un livre).
 
+---
+
 ### **Catégories**
 
 - **Obtenir Toutes les Catégories** : `GET /api/categories`  
@@ -281,18 +312,4 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ---
 
-## 📸 Captures d'Écran
-
----
-
-<!-- ## 🤝 Contribution
-
-Les contributions sont les bienvenues ! Suivez ces étapes :
-
-1. Forkez le dépôt.
-2. Créez une nouvelle branche (`git checkout -b feature/VotreFonctionnalité`).
-3. Committez vos changements (`git commit -m 'Ajouter une fonctionnalité'`).
-4. Poussez vers la branche (`git push origin feature/VotreFonctionnalité`).
-5. Ouvrez une pull request.
-
---- -->
+## Captures d'Écran
