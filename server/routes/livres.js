@@ -11,11 +11,6 @@ const {
   deleteLivre,
 } = require("../controllers/livres.controller");
 
-// @desc    Add a new book
-// @route   POST /api/livres/
-// @access  Admin
-router.post("/", adminAuth, addLivre);
-
 // @desc    Get all books
 // @route   GET /api/livres/
 // @access  Public
@@ -25,6 +20,11 @@ router.get("/", getAllLivers);
 // @route   GET /api/livres/:id
 // @access  Public
 router.get("/:id", getLiverById);
+
+// @desc    Add a new book
+// @route   POST /api/livres/
+// @access  Admin
+router.post("/", adminAuth, addLivre);
 
 // @desc    Update a book
 // @route   PUT /api/livres/:id
