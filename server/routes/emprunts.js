@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { clientAuth, adminAuth } = require("../middlewares/auth");
+const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
   createEmprunt,
@@ -16,36 +16,36 @@ const {
 // @desc    Create a new emprunt (borrow a book)
 // @route   POST /api/emprunts
 // @access  Client
-router.post("/", clientAuth, createEmprunt);
+router.post("/", authenticate, createEmprunt);
 
 // @desc    Get an emprunt by ID
 // @route   GET /api/emprunts/:id
 // @access  Client or Admin
-router.get("/:id", clientAuth, getEmpruntById);
+router.get("/:id", authenticate, getEmpruntById);
 
 // @desc    Update an emprunt (e.g., extend return date)
 // @route   PUT /api/emprunts/:id
 // @access  Admin
-router.put("/:id", adminAuth, updateEmprunt);
+router.put("/:id", authenticate, authorize(["admin"]), updateEmprunt);
 
 // @desc    Delete an emprunt
 // @route   DELETE /api/emprunts/:id
 // @access  Admin
-router.delete("/:id", adminAuth, deleteEmprunt);
+router.delete("/:id", authenticate, authorize(["admin"]), deleteEmprunt);
 
 // @desc    Get all emprunts (for admin)
 // @route   GET /api/emprunts
 // @access  Admin
-router.get("/", adminAuth, getAllEmprunts);
+router.get("/", authenticate, authorize(["admin"]), getAllEmprunts);
 
 // @desc    Get all emprunts for a specific client
 // @route   GET /api/emprunts/client/:clientId
 // @access  Admin or Client (if accessing their own emprunts)
-router.get("/client/:clientId", clientAuth, getEmpruntsByClient);
+router.get("/client/:clientId", authenticate, getEmpruntsByClient);
 
 // @desc    Return a book (mark emprunt as returned)
 // @route   POST /api/emprunts/:id/return
 // @access  Client or Admin
-router.post("/:id/return", clientAuth, returnEmprunt);
+router.post("/:id/return", authenticate, returnEmprunt);
 
 module.exports = router;

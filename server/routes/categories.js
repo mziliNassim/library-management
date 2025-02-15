@@ -1,7 +1,7 @@
 const { Router } = require("express");
 const router = Router();
 
-const { adminAuth } = require("../middlewares/auth");
+const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
   addCategorie,
@@ -14,7 +14,7 @@ const {
 // @desc    Add a new category
 // @route   POST /api/categories/
 // @access  Admin
-router.post("/", adminAuth, addCategorie);
+router.post("/", authenticate, authorize(["admin"]), addCategorie);
 
 // @desc    Get all categories
 // @route   GET /api/categories/
@@ -29,11 +29,11 @@ router.get("/:id", getCategorieById);
 // @desc    Update a category
 // @route   PUT /api/categories/:id
 // @access  Admin
-router.put("/:id", adminAuth, updateCategorie);
+router.put("/:id", authenticate, authorize(["admin"]), updateCategorie);
 
 // @desc    Delete a category
 // @route   DELETE /api/categories/:id
 // @access  Admin
-router.delete("/:id", adminAuth, deleteCategorie);
+router.delete("/:id", authenticate, authorize(["admin"]), deleteCategorie);
 
 module.exports = router;

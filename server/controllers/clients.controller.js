@@ -133,4 +133,8 @@ module.exports = {
   updateProfile,
   getClientDetails,
   getEmprunts,
+  getAllClients,
+  getClientById,
+  updateClient,
+  deleteClient,
 };

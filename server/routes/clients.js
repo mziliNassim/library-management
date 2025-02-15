@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { clientAuth } = require("../middlewares/auth");
+const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
   register,
@@ -10,6 +10,10 @@ const {
   updateProfile,
   getEmprunts,
   getClientDetails,
+  getAllClients,
+  getClientById,
+  updateClient,
+  deleteClient,
 } = require("../controllers/clients.controller");
 
 // ! ========== Authentification ==========
@@ -27,46 +31,46 @@ router.post("/login", login);
 // @desc    Logout a client
 // @route   POST /api/clients/logout
 // @access  Client
-router.post("/logout", clientAuth, logout);
+router.post("/logout", authenticate, logout);
 
 // ! ========== Profile ==========
 
 // @desc    Update client profile
 // @route   PUT /api/clients/profile
 // @access  Client
-router.put("/profile", clientAuth, updateProfile);
+router.put("/profile", authenticate, updateProfile);
 
 // @desc    Get client details
 // @route   GET /api/clients/me
 // @access  Client
-router.get("/me", clientAuth, getClientDetails);
+router.get("/me", authenticate, getClientDetails);
 
 // @desc    Get all emprunts for a client
 // @route   GET /api/clients/emprunts
 // @access  Client
-router.get("/emprunts", clientAuth, getEmprunts);
+router.get("/emprunts", authenticate, getEmprunts);
 
 // ! ========== Crud ==========
 
 // @desc    Get all clients
 // @route   GET /api/clients/
 // @access  Admin
-router.get("/", adminAuth, getAllClients);
+router.get("/", authenticate, authorize(["admin"]), getAllClients);
 
 // @desc    Get a client by ID
 // @route   GET /api/clients/:id
 // @access  Admin
-router.get("/:id", adminAuth, getClientById);
+router.get("/:id", authenticate, authorize(["admin"]), getClientById);
 
 // @desc    Update a client
 // @route   PUT /api/clients/:id
 // @access  Admin
-router.put("/:id", adminAuth, updateClient);
+router.put("/:id", authenticate, authorize(["admin"]), updateClient);
 
 // @desc    Delete a client
 // @route   DELETE /api/clients/:id
 // @access  Admin
-router.delete("/:id", adminAuth, deleteClient);
+router.delete("/:id", authenticate, authorize(["admin"]), deleteClient);
 
 // ! ==========  ==========
 
