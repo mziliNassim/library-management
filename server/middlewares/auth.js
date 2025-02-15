@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const Client = require("../models/Client");
+const TokenBlacklist = require("../models/TokenBlacklist");
 
 const generateToken = (user) => {
   return jwt.sign(
@@ -14,13 +15,17 @@ const authenticate = async (req, res, next) => {
     const token = req.header("Authorization")?.replace("Bearer ", "");
     if (!token) throw new Error("Authorization token is required");
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    const user = await Client.findOne({ _id: decoded.id, active: true });
+    // Check if the token is blacklisted
+    const isBlacklisted = await TokenBlacklist.findOne({ token });
+    if (isBlacklisted) throw new Error("Token is invalid");
 
-    if (!user) throw new Error("User not found or inactive");
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const client = await Client.findOne({ _id: decoded.id });
+
+    if (!client) throw new Error("client not found or inactive");
 
     req.token = token;
-    req.user = user;
+    req.client = client;
     next();
   } catch (error) {
     res
@@ -31,7 +36,7 @@ const authenticate = async (req, res, next) => {
 
 const authorize = (roles = []) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!roles.includes(req.client.role)) {
       return res
         .status(403)
         .json({ message: "Access denied. Insufficient permissions." });

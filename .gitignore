@@ -1,6 +1,8 @@
 /diagrams
 /docs
 
+/code.txt
+/validation.txt
 
 /server/node_modules
 /server/.gitignore

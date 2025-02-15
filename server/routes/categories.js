@@ -11,11 +11,6 @@ const {
   deleteCategorie,
 } = require("../controllers/categories.controller");
 
-// @desc    Add a new category
-// @route   POST /api/categories/
-// @access  Admin
-router.post("/", authenticate, authorize(["admin"]), addCategorie);
-
 // @desc    Get all categories
 // @route   GET /api/categories/
 // @access  Public
@@ -25,6 +20,11 @@ router.get("/", getAllCategories);
 // @route   GET /api/categories/:id
 // @access  Public
 router.get("/:id", getCategorieById);
+
+// @desc    Add a new category
+// @route   POST /api/categories/
+// @access  Admin
+router.post("/", authenticate, authorize(["admin"]), addCategorie);
 
 // @desc    Update a category
 // @route   PUT /api/categories/:id
