@@ -8,6 +8,7 @@ const {
   login,
   logout,
   updateProfile,
+  updatePassword,
   getEmprunts,
   getClientDetails,
   getAllClients,
@@ -39,6 +40,11 @@ router.post("/logout", authenticate, logout);
 // @route   PUT /api/clients/profile
 // @access  Client
 router.put("/profile", authenticate, updateProfile);
+
+// @desc    Update client password
+// @route   PUT /api/clients/password
+// @access  Client
+router.put("/password", authenticate, updatePassword);
 
 // @desc    Get client details
 // @route   GET /api/clients/me

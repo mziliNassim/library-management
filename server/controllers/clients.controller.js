@@ -7,11 +7,20 @@ const TokenBlacklist = require("../models/TokenBlacklist");
 const register = async (req, res) => {
   try {
     const client = new Client(req.body);
+
+    // Password match
+    if (
+      !(await client.matchPassword(req.body.password, req.body.confirmPassword))
+    ) {
+      return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    client.active = true;
     await client.save();
     const token = await auth.generateToken(client);
-    res.status(201).json({ client, token });
+    return res.status(201).json({ client, token });
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ message: "Internal Server Error!", error: error.message });
   }
@@ -19,12 +28,20 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
+    console.log("login ~ req.body:", req.body);
     const client = await Client.findOne({ email: req.body.email });
     if (!client || !(await client.comparePassword(req.body.password))) {
       return res.status(401).json({ message: "Login failed" });
     }
+
+    // Set active to true if it was false
+    if (!client.active) {
+      client.active = true;
+      await client.save();
+    }
+
     const token = await auth.generateToken(client);
-    res.json({ client, token });
+    res.status(200).json({ client, token });
   } catch (error) {
     res
       .status(400)
@@ -37,6 +54,14 @@ const logout = async (req, res) => {
     const token = req.token;
     const blacklistedToken = new TokenBlacklist({ token });
     await blacklistedToken.save();
+
+    // Set active to false
+    const client = req.client;
+    if (client.active) {
+      client.active = false;
+      await client.save();
+    }
+
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
     res
@@ -65,6 +90,54 @@ const updateProfile = async (req, res) => {
     res
       .status(500)
       .json({ message: "Internal Server Error!", error: error.message });
+  }
+};
+
+const updatePassword = async (req, res) => {
+  try {
+    const { oldPassword, newPassword, confirmPassword } = req.body;
+
+    // Check if all required fields are present
+    if (!oldPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        message:
+          "All fields are required (oldPassword, newPassword, confirmPassword)!",
+      });
+    }
+
+    // Verify old password
+    const isValidPassword = await req.client.comparePassword(oldPassword);
+    if (!isValidPassword) {
+      return res
+        .status(401)
+        .json({ message: "Current password is incorrect!" });
+    }
+
+    // Validate and match new passwords
+    try {
+      await req.client.matchPassword(newPassword, confirmPassword);
+    } catch (error) {
+      return res.status(400).json({ message: error.message });
+    }
+
+    // Update password
+    req.client.password = newPassword;
+    await req.client.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "Password updated successfully!",
+      data: {
+        ...req.client._doc,
+        password: undefined,
+        __v: undefined,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: "Internal Server Error!",
+      error: error.message,
+    });
   }
 };
 
@@ -159,6 +232,7 @@ module.exports = {
   login,
   logout,
   updateProfile,
+  updatePassword,
   getClientDetails,
   getEmprunts,
   getAllClients,

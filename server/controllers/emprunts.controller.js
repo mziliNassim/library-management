@@ -1,6 +1,5 @@
 const Emprunt = require("../models/Emprunt");
 const Livre = require("../models/Livre");
-const Client = require("../models/Client");
 
 const createEmprunt = async (req, res) => {
   try {
@@ -160,7 +159,7 @@ const returnEmprunt = async (req, res) => {
       await livre.save();
     }
 
-    res.status(200).json({ emprunt, message: "Book returned successfully!" });
+    res.status(200).json({ message: "Book returned successfully!", emprunt });
   } catch (error) {
     res
       .status(500)
