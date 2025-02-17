@@ -230,6 +230,8 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 ### **Livres**
 
+- > Livres Documentation [ici](https://gestion-bibliotique.apidog.io/get-all-books-14029046e0)
+
 - **Obtenir Tous les Livres** : `GET /api/livres`  
   **Accès** : Public  
   **Description** : Récupère la liste de tous les livres disponibles.
