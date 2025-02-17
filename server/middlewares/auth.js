@@ -28,18 +28,22 @@ const authenticate = async (req, res, next) => {
     req.client = client;
     next();
   } catch (error) {
-    res
-      .status(401)
-      .json({ error: error.message, message: "Authentication required!" });
+    res.status(401).json({
+      success: false,
+      message: "Authentication required!",
+      data: null,
+    });
   }
 };
 
 const authorize = (roles = []) => {
   return (req, res, next) => {
     if (!roles.includes(req.client.role)) {
-      return res
-        .status(403)
-        .json({ message: "Access denied. Insufficient permissions." });
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Insufficient permissions.",
+        data: null,
+      });
     }
     next();
   };

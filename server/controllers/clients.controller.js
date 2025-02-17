@@ -12,26 +12,40 @@ const register = async (req, res) => {
     if (
       !(await client.matchPassword(req.body.password, req.body.confirmPassword))
     ) {
-      return res.status(400).json({ message: "Passwords do not match" });
+      return res.status(400).json({
+        success: false,
+        message: "Passwords do not match!",
+        data: null,
+      });
     }
 
     client.active = true;
     await client.save();
     const token = await auth.generateToken(client);
-    return res.status(201).json({ client, token });
+
+    client.password = undefined;
+    client.active = undefined;
+    client.__v = undefined;
+
+    return res.status(201).json({
+      success: true,
+      message: "registration successful!",
+      data: { client, token },
+    });
   } catch (error) {
-    return res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
 const login = async (req, res) => {
   try {
-    console.log("login ~ req.body:", req.body);
     const client = await Client.findOne({ email: req.body.email });
     if (!client || !(await client.comparePassword(req.body.password))) {
-      return res.status(401).json({ message: "Login failed" });
+      return res.status(401).json({ message: "Invalid email or password!" });
     }
 
     // Set active to true if it was false
@@ -41,11 +55,20 @@ const login = async (req, res) => {
     }
 
     const token = await auth.generateToken(client);
-    res.status(200).json({ client, token });
+
+    client.password = undefined;
+    client.active = undefined;
+    client.__v = undefined;
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      data: { client, token },
+    });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, data: null });
   }
 };
 
@@ -62,11 +85,13 @@ const logout = async (req, res) => {
       await client.save();
     }
 
-    res.status(200).json({ message: "Logged out successfully" });
+    return res
+      .status(200)
+      .json({ success: true, message: "Logged out successfully", data: null });
   } catch (error) {
-    res
+    return res
       .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+      .json({ success: false, message: error.message, data: null });
   }
 };
 
@@ -80,16 +105,27 @@ const updateProfile = async (req, res) => {
     );
 
     if (!isValidOperation) {
-      return res.status(400).json({ error: "Invalid updates!" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid updates!", data: null });
     }
 
     updates.forEach((update) => (req.client[update] = req.body[update]));
     await req.client.save();
-    res.json({ client: req.client, message: "Profile updated successfully!" });
+
+    req.client.password = undefined;
+    req.client.active = undefined;
+    req.client.__v = undefined;
+
+    return res.status(200).json({
+      success: true,
+      message: "Profile updated successfully!",
+      data: { client: req.client },
+    });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+      .json({ success: false, message: error.message, data: null });
   }
 };
 
@@ -100,24 +136,32 @@ const updatePassword = async (req, res) => {
     // Check if all required fields are present
     if (!oldPassword || !newPassword || !confirmPassword) {
       return res.status(400).json({
+        success: false,
         message:
           "All fields are required (oldPassword, newPassword, confirmPassword)!",
+        data: null,
       });
     }
 
+    const client = req.client;
+
     // Verify old password
-    const isValidPassword = await req.client.comparePassword(oldPassword);
+    const isValidPassword = await client.comparePassword(oldPassword);
     if (!isValidPassword) {
-      return res
-        .status(401)
-        .json({ message: "Current password is incorrect!" });
+      return res.status(400).json({
+        success: false,
+        message: "Current password is incorrect!",
+        data: null,
+      });
     }
 
     // Validate and match new passwords
     try {
       await req.client.matchPassword(newPassword, confirmPassword);
     } catch (error) {
-      return res.status(400).json({ message: error.message });
+      return res
+        .status(400)
+        .json({ success: false, message: error.message, data: null });
     }
 
     // Update password
@@ -143,20 +187,23 @@ const updatePassword = async (req, res) => {
 
 const getClientDetails = async (req, res) => {
   try {
-    res.status(200).json({
+    const client = req.client;
+
+    client.password = undefined;
+    client.active = undefined;
+    client.__v = undefined;
+
+    return res.status(200).json({
+      success: true,
       message: "Client details fetched successfully!",
-      client: {
-        ...req.client._doc,
-        password: undefined,
-        role: undefined,
-        active: undefined,
-        __v: undefined,
-      },
+      data: { client },
     });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -164,14 +211,23 @@ const getEmprunts = async (req, res) => {
   try {
     const emprunts = await Emprunt.find({ clientId: req.client._id });
     if (emprunts.length === 0)
-      return res.status(404).json({ message: "No emprunts found!" });
-    res
-      .status(200)
-      .json({ message: "Emprunts fetched successfully!", emprunts });
+      return res.status(404).json({
+        success: false,
+        message: "No emprunts found!",
+        data: { emprunts: [] },
+      });
+
+    return res.status(200).json({
+      success: true,
+      message: "Emprunts fetched successfully!",
+      data: { emprunts },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -180,24 +236,56 @@ const getAllClients = async (req, res) => {
   try {
     const clients = await Client.find({});
     if (clients.length === 0)
-      return res.status(404).json({ message: "No clients found!" });
-    res.json(clients);
+      return res.status(404).json({
+        success: false,
+        message: "No clients found!",
+        data: { clients: [] },
+      });
+
+    clients.map((client) => {
+      client.password = undefined;
+      client.active = undefined;
+      client.__v = undefined;
+      return client;
+    });
+
+    return res.json({
+      success: true,
+      message: "Clients fetched successfully!",
+      data: { clients },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
 const getClientById = async (req, res) => {
   try {
     const client = await Client.findById(req.params.id);
-    if (!client) return res.status(404).json({ message: "Client not found" });
-    res.status(200).json(client);
+    if (!client)
+      return res
+        .status(404)
+        .json({ success: false, message: "Client not found!", data: null });
+
+    client.password = undefined;
+    client.active = undefined;
+    client.__v = undefined;
+
+    return res.status(200).json({
+      success: true,
+      message: "Client fetched successfully!",
+      data: { client },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -206,20 +294,45 @@ const updateClient = async (req, res) => {
     const client = await Client.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
-    if (!client) return res.status(404).json({ message: "Client not found" });
-    res.status(200).json({ client, message: "Client updated successfully!" });
+
+    if (!client)
+      return res
+        .status(404)
+        .json({ success: false, message: "Client not found!", data: null });
+
+    client.password = undefined;
+    client.active = undefined;
+    client.__v = undefined;
+
+    return res.status(200).json({
+      success: true,
+      message: "Client updated successfully!",
+      data: { client },
+    });
   } catch (error) {
-    res
+    return res
       .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+      .json({ success: false, message: error.message, data: null });
   }
 };
 
 const deleteClient = async (req, res) => {
   try {
     const client = await Client.findByIdAndDelete(req.params.id);
-    if (!client) return res.status(404).json({ message: "Client not found" });
-    res.status(200).json({ message: "Client deleted successfully!" });
+    if (!client)
+      return res
+        .status(404)
+        .json({ success: false, message: "Client not found!", data: null });
+
+    client.password = undefined;
+    client.active = undefined;
+    client.__v = undefined;
+
+    res.status(200).json({
+      success: true,
+      message: "Client deleted successfully!",
+      data: { client },
+    });
   } catch (error) {
     res
       .status(500)
