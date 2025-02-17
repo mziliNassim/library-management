@@ -7,26 +7,10 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 ## Navigation
 
 - [Fonctionnalités](#fonctionnalités)
-  - [Fonctionnalités Client](#fonctionnalités-client)
-  - [Fonctionnalités Admin](#fonctionnalités-admin)
 - [Technologies Utilisées](#technologies-utilisées)
-  - [Front-End](#front-end)
-  - [Back-End](#back-end)
-  - [Outils](#outils)
 - [Utilisation](#utilisation)
-  - [Prérequis](#prérequis)
-  - [Installation](#installation)
 - [Structure du Projet](#structure-du-projet)
-  - [Back-End](#back-end-1)
-  - [Front-End](#front-end-1)
 - [Documentation de l'API](#documentation-de-lapi)
-  - [Clients](#clients)
-    - [Authentification](#1---authentification)
-    - [Profil](#2---profil)
-    - [CRUD](#3---crud)
-  - [Livres](#livres)
-  - [Emprunts](#emprunts)
-  - [Catégories](#catégories)
 - [Captures d'Écran](#captures-décran)
 
 ## Fonctionnalités
@@ -182,9 +166,13 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ## Documentation de l'API
 
+_Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/), pour plus de détails sur les endpoints et les requêtes._
+
 ### **Clients**
 
 #### **_1 - Authentification_**
+
+- > Client Authentification Documentation [ici](https://gestion-bibliotique.apidog.io/register-a-new-client-13650961e0)
 
 - **Inscription** : `POST /api/clients/register`  
   **Accès** : Public  
@@ -200,9 +188,15 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 #### **_2 - Profil_**
 
+- > Client Profile Documentation [ici](https://gestion-bibliotique.apidog.io/update-client-profile-14025249e0)
+
 - **Mettre à Jour le Profil** : `PUT /api/clients/profile`  
   **Accès** : Client  
   **Description** : Permet à un client de mettre à jour ses informations de profil.
+
+- **Changer le Mot de Passe** : `PUT /api/clients/password`
+  **Accès** : Client  
+  **Description** : Permet à un client de changer son mot de passe.
 
 - **Obtenir les Détails du Client** : `GET /api/clients/me`  
   **Accès** : Client  
@@ -213,6 +207,8 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
   **Description** : Récupère tous les emprunts du client connecté.
 
 #### **_3 - CRUD_**
+
+- > Clients CRUD Documentation [ici](https://gestion-bibliotique.apidog.io/get-all-clients-14027756e0)
 
 - **Obtenir Tous les Clients** : `GET /api/clients/`  
   **Accès** : Admin  
