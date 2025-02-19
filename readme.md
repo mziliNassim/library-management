@@ -256,6 +256,8 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 ### **Emprunts**
 
+- > Emprunts Documentation [ici](https://gestion-bibliotique.apidog.io/create-a-new-emprunt-14057301e0)
+
 - **Créer un Emprunt** : `POST /api/emprunts`  
   **Accès** : Client uniquement  
   **Description** : Permet à un client de créer un nouvel emprunt (emprunter un livre).

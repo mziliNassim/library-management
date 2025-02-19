@@ -1,11 +1,14 @@
 const Emprunt = require("../models/Emprunt");
 const Livre = require("../models/Livre");
+const Client = require("../models/Client");
 
 const createEmprunt = async (req, res) => {
   try {
     const livre = await Livre.findById(req.body.livreId); // req.body = { livreId }
     if (!livre || !livre.checkDisponibilite()) {
-      return res.status(400).json({ error: "Book not available" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Book not available!", data: null });
     }
 
     const emprunt = new Emprunt({
@@ -18,51 +21,89 @@ const createEmprunt = async (req, res) => {
     livre.quantite--;
     await livre.save();
 
-    res.status(201).json(emprunt);
+    res.status(201).json({
+      success: true,
+      message: "Emprunt created successfully!",
+      data: { emprunt },
+    });
   } catch (error) {
-    res
-      .status(400)
-      .json({ message: "Internal Server Error!", error: error.message });
+    res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
 const getEmpruntById = async (req, res) => {
-  console.log("getEmpruntById ~ req:", req);
   try {
     const emprunt = await Emprunt.findById(req.params.id);
     // .populate("clientId")
     // .populate("livreId");
 
-    if (!emprunt) return res.status(404).json({ message: "Emprunt not found" });
+    if (!emprunt)
+      return res
+        .status(404)
+        .json({ success: false, message: "Emprunt not founds!", data: null });
 
     if (
       req.client._id.toString() !== emprunt.clientId._id.toString() &&
       req.client.role !== "admin"
-    ) {
-      return res.status(403).json({ message: "Unauthorized access" });
-    }
+    )
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Insufficient permissions.",
+        data: null,
+      });
 
-    res.status(200).json(emprunt);
+    return res.status(200).json({
+      success: true,
+      message: "Emprunt fetched successfully!",
+      data: { emprunt },
+    });
   } catch (error) {
-    res
+    return res
       .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+      .json({ success: false, message: error.message, data: null });
   }
 };
 
 const updateEmprunt = async (req, res) => {
   try {
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ["statut", "dateRetourPrevu"];
+    const isValidOperation = updates.every((update) =>
+      allowedUpdates.includes(update)
+    );
+
+    if (!isValidOperation)
+      return res.status(400).json({
+        success: false,
+        message: "Invalid updates!",
+        data: null,
+      });
+
+    // Check if the emprunt exists
     const emprunt = await Emprunt.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
     });
 
-    if (!emprunt) return res.status(404).json({ message: "Emprunt not found" });
+    if (!emprunt)
+      return res
+        .status(404)
+        .json({ success: false, message: "Emprunt not found!", data: null });
 
-    res.status(200).json({ emprunt, message: "Emprunt updated successfully!" });
+    return res.status(200).json({
+      success: true,
+      message: "Emprunt updated successfully!",
+      data: { emprunt },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -70,7 +111,12 @@ const deleteEmprunt = async (req, res) => {
   try {
     const emprunt = await Emprunt.findByIdAndDelete(req.params.id);
 
-    if (!emprunt) return res.status(404).json({ message: "Emprunt not found" });
+    if (!emprunt)
+      return res.status(404).json({
+        success: false,
+        message: "Emprunt not found!",
+        data: null,
+      });
 
     // Increase book quantity when emprunt is deleted
     const livre = await Livre.findById(emprunt.livreId);
@@ -79,11 +125,17 @@ const deleteEmprunt = async (req, res) => {
       await livre.save();
     }
 
-    res.status(200).json({ message: "Emprunt deleted successfully!" });
+    return res.status(200).json({
+      success: true,
+      message: "Emprunt deleted successfully!",
+      data: { emprunt },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -94,13 +146,23 @@ const getAllEmprunts = async (req, res) => {
     // .populate("livreId");
 
     if (emprunts.length === 0)
-      return res.status(404).json({ message: "No emprunts found" });
+      return res.status(404).json({
+        success: true,
+        message: "No emprunt found!",
+        data: null,
+      });
 
-    res.status(200).json(emprunts);
+    return res.status(200).json({
+      success: true,
+      message: "All emprunts fetched successfuly!",
+      data: { emprunts },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: true,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -108,30 +170,43 @@ const getEmpruntsByClient = async (req, res) => {
   try {
     const clientId = req.params.clientId;
 
-    // Ensure the client is accessing their own emprunts or is an admin
-    // if (req.client._id.toString() !== clientId && !req.admin) {
-    //   return res.status(403).json({ message: "Unauthorized access" });
-    // }
+    // check client exist
+    const client = await Client.findById(clientId);
+    if (!client)
+      return res.status(404).json({
+        success: false,
+        message: "Client not found!",
+        data: null,
+      });
 
-    if (req.client._id.toString() !== clientId && req.client.role !== "admin") {
-      return res.status(403).json({ message: "Unauthorized access" });
-    }
+    if (req.client._id.toString() !== clientId && req.client.role !== "admin")
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Insufficient permissions.",
+        data: null,
+      });
 
-    const emprunts = await Emprunt.find({ clientId });
-    // .populate("clientId")
-    // .populate("livreId");
+    const emprunts = await Emprunt.find({ clientId }); // .populate("clientId").populate("livreId");
 
-    if (emprunts.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No emprunts found for this client" });
-    }
+    // check emprunts exist
+    if (emprunts.length === 0)
+      return res.status(404).json({
+        success: false,
+        message: "No emprunts found for this client!",
+        data: null,
+      });
 
-    res.status(200).json(emprunts);
+    return res.status(200).json({
+      success: true,
+      message: `${client.nom}'s emprunts fetched successfully!`,
+      data: { emprunts },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
@@ -139,14 +214,20 @@ const returnEmprunt = async (req, res) => {
   try {
     const emprunt = await Emprunt.findById(req.params.id);
 
-    if (!emprunt) return res.status(404).json({ message: "Emprunt not found" });
+    if (!emprunt)
+      return res
+        .status(404)
+        .json({ success: false, message: "Emprunt not found!", data: null });
 
     if (
       req.client._id.toString() !== emprunt.clientId.toString() &&
       req.client.role !== "admin"
-    ) {
-      return res.status(403).json({ message: "Unauthorized access" });
-    }
+    )
+      return res.status(403).json({
+        success: false,
+        message: "Access denied. Insufficient permissions.",
+        data: null,
+      });
 
     emprunt.dateRetourEffectif = new Date();
     emprunt.statut = "retourné";
@@ -159,11 +240,17 @@ const returnEmprunt = async (req, res) => {
       await livre.save();
     }
 
-    res.status(200).json({ message: "Book returned successfully!", emprunt });
+    return res.status(200).json({
+      success: true,
+      message: "Book returned successfully!",
+      data: { emprunt, livre },
+    });
   } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Internal Server Error!", error: error.message });
+    return res.status(500).json({
+      success: true,
+      message: error.message,
+      data: null,
+    });
   }
 };
 
