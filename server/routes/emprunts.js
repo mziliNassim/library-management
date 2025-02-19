@@ -13,10 +13,10 @@ const {
   returnEmprunt,
 } = require("../controllers/emprunts.controller");
 
-// @desc    Create a new emprunt (borrow a book)
-// @route   POST /api/emprunts
+// @desc    Create a new emprunt
+// @route   POST /api/emprunts/:livreId
 // @access  Client
-router.post("/", authenticate, createEmprunt);
+router.post("/:livreId", authenticate, createEmprunt);
 
 // @desc    Get an emprunt by ID
 // @route   GET /api/emprunts/:id

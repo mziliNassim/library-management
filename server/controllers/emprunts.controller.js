@@ -4,7 +4,7 @@ const Client = require("../models/Client");
 
 const createEmprunt = async (req, res) => {
   try {
-    const livre = await Livre.findById(req.body.livreId); // req.body = { livreId }
+    const livre = await Livre.findById(req.params.livreId);
     if (!livre || !livre.checkDisponibilite()) {
       return res
         .status(400)
@@ -12,7 +12,7 @@ const createEmprunt = async (req, res) => {
     }
 
     const emprunt = new Emprunt({
-      ...req.body,
+      ...req.params,
       clientId: req.client._id,
       dateRetourPrevu: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days
     });
