@@ -44,7 +44,6 @@ router.put("/profile", authenticate, updateProfile);
 // @desc    Update client password
 // @route   PUT /api/clients/password
 // @access  Client
-// ? debug : "invalid oldPassword!"
 router.put("/password", authenticate, updatePassword);
 
 // @desc    Get client details

@@ -45,7 +45,11 @@ const login = async (req, res) => {
   try {
     const client = await Client.findOne({ email: req.body.email });
     if (!client || !(await client.comparePassword(req.body.password))) {
-      return res.status(401).json({ message: "Invalid email or password!" });
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password!",
+        data: null,
+      });
     }
 
     // Set active to true if it was false
@@ -179,8 +183,9 @@ const updatePassword = async (req, res) => {
     });
   } catch (error) {
     return res.status(500).json({
-      message: "Internal Server Error!",
-      error: error.message,
+      success: false,
+      message: error.message,
+      data: null,
     });
   }
 };
@@ -328,13 +333,13 @@ const deleteClient = async (req, res) => {
     client.active = undefined;
     client.__v = undefined;
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
       message: "Client deleted successfully!",
       data: { client },
     });
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ message: "Internal Server Error!", error: error.message });
   }
