@@ -8,13 +8,19 @@ const register = async (req, res) => {
   try {
     const client = new Client(req.body);
 
-    // Password match
-    if (
-      !(await client.matchPassword(req.body.password, req.body.confirmPassword))
-    ) {
+    try {
+      // Valid Nom
+      await client.validName(req.body.nom);
+
+      // Valid Email
+      await client.validEmail(req.body.email);
+
+      // Password match
+      await client.matchPassword(req.body.password, req.body.confirmPassword);
+    } catch (err) {
       return res.status(400).json({
         success: false,
-        message: "Passwords do not match!",
+        message: err.message,
         data: null,
       });
     }
@@ -33,6 +39,13 @@ const register = async (req, res) => {
       data: { client, token },
     });
   } catch (error) {
+    if (error.code === 11000)
+      return res.status(400).json({
+        success: false,
+        message: "Invalid Email address!",
+        data: null,
+      });
+
     return res.status(500).json({
       success: false,
       message: error.message,
