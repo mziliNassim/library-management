@@ -290,6 +290,8 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 ### **Catégories**
 
+- > Catégories Documentation [ici](https://gestion-bibliotique.apidog.io/get-all-categories-14128320e0)
+
 - **Obtenir Toutes les Catégories** : `GET /api/categories`  
   **Accès** : Public  
   **Description** : Récupère la liste de toutes les catégories disponibles.

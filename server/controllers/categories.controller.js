@@ -1,21 +1,5 @@
 const Categorie = require("../models/Categorie");
 
-const addCategorie = async (req, res) => {
-  try {
-    const categorie = new Categorie(req.body);
-    await categorie.save();
-    res.status(201).json({
-      success: true,
-      message: "Category created successfully!",
-      data: { categorie },
-    });
-  } catch (error) {
-    res
-      .status(400)
-      .send({ success: false, message: error.message, data: null });
-  }
-};
-
 const getAllCategories = async (req, res) => {
   try {
     SSS;
@@ -44,7 +28,7 @@ const getCategorieById = async (req, res) => {
     if (!categorie)
       return res
         .status(404)
-        .json({ success: false, message: "Category not found", data: null });
+        .json({ success: false, message: "Category not found!", data: null });
 
     return res.status(200).json({
       success: true,
@@ -54,6 +38,22 @@ const getCategorieById = async (req, res) => {
   } catch (error) {
     return res
       .status(500)
+      .send({ success: false, message: error.message, data: null });
+  }
+};
+
+const addCategorie = async (req, res) => {
+  try {
+    const categorie = new Categorie(req.body);
+    await categorie.save();
+    return res.status(201).json({
+      success: true,
+      message: "Category created successfully!",
+      data: { categorie },
+    });
+  } catch (error) {
+    return res
+      .status(400)
       .send({ success: false, message: error.message, data: null });
   }
 };
@@ -88,7 +88,7 @@ const deleteCategorie = async (req, res) => {
     if (!categorie)
       return res
         .status(404)
-        .json({ success: false, message: "Category not found", data: null });
+        .json({ success: false, message: "Category not found!", data: null });
 
     return res.status(200).json({
       success: true,
