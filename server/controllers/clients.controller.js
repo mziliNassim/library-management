@@ -6,17 +6,25 @@ const TokenBlacklist = require("../models/TokenBlacklist");
 // Authentication
 const register = async (req, res) => {
   try {
+    const { nom, email, password, confirmPassword } = req.body;
+    if (!nom || !email || !password || !confirmPassword)
+      return res.status(400).json({
+        success: false,
+        message: "Require all fields!",
+        data: null,
+      });
+
     const client = new Client(req.body);
 
     try {
       // Valid Nom
-      await client.validName(req.body.nom);
+      await client.validName(nom);
 
       // Valid Email
-      await client.validEmail(req.body.email);
+      await client.validEmail(email);
 
       // Password match
-      await client.matchPassword(req.body.password, req.body.confirmPassword);
+      await client.matchPassword(password, confirmPassword);
     } catch (err) {
       return res.status(400).json({
         success: false,
@@ -35,7 +43,7 @@ const register = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      message: "registration successful!",
+      message: "Registration successful!",
       data: { client, token },
     });
   } catch (error) {
