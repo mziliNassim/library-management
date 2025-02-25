@@ -12,6 +12,7 @@
 /server/*.log
 
 
+/client
 /client/.gitignore
 /clinet/.env
 /Client/node_modules

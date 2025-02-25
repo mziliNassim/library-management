@@ -29,3 +29,5 @@ const listenServer = async () => {
   }
 };
 listenServer();
+
+module.exports = app; 
