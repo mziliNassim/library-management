@@ -5,7 +5,7 @@ const TokenBlacklist = require("../models/TokenBlacklist");
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id.toString(), role: user.role },
-    process.env.JWT_SECRET,
+    "e89f4s8d4f98sd4f984sd984f984f449s8d4f984sdf984sd984f9s84d984f984sd84f98sd4f",
     { expiresIn: "24h" }
   );
 };
@@ -19,7 +19,10 @@ const authenticate = async (req, res, next) => {
     const isBlacklisted = await TokenBlacklist.findOne({ token });
     if (isBlacklisted) throw new Error("Token is invalid");
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(
+      token,
+      "e89f4s8d4f98sd4f984sd984f984f449s8d4f984sdf984sd984f9s84d984f984sd84f98sd4f"
+    );
     const client = await Client.findOne({ _id: decoded.id });
 
     if (!client) throw new Error("client not found or inactive");

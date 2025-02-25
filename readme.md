@@ -44,15 +44,6 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ## Technologies Utilisées
 
-### **Front-End**
-
-- **React** (Vite) - Bibliothèque front-end pour construire des interfaces utilisateur.
-- **Redux Toolkit** - Gestion de l'état pour React.
-- **React Router DOM** - Routage pour la navigation.
-- **Axios** - Client HTTP pour les requêtes API.
-- **TailwindCSS** - Framework CSS utility-first pour le style.
-- **Mode Clair/Sombre** - Support des thèmes clair et sombre.
-
 ### **Back-End**
 
 - **Node.js** - Environnement d'exécution JavaScript pour le serveur.
@@ -64,7 +55,6 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 ### **Outils**
 
 - **Postman** - Test des API.
-- **Vite** - Outil de développement rapide pour React.
 - **Git** - Contrôle de version.
 
 ---
@@ -82,25 +72,16 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 1. **Cloner le Dépôt**
 
    ```bash
-   git clone https://github.com/votre-username/library-management.git
+   git clone https://github.com/mziliNassim/library-management
    cd library-management
    ```
 
 2. **Installer les Dépendances**
 
-   - Back-End :
-
-     ```bash
-     cd server
-     npm install
-     ```
-
-   - Front-End :
-
-     ```bash
-     cd client
-     npm install
-     ```
+   ```bash
+   cd server
+   npm install
+   ```
 
 3. **Configurer les Variables d'Environnement**
 
@@ -115,23 +96,33 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
      JWT_SECRET=your_jwt_secret_key
      ```
 
-4. **Démarrer le Serveur Back-End**
+4. **Créez un fichier `netlify.toml` dans le dossier `server` :**
 
-   ```bash
-   cd server
-   npm start
+   ```toml
+   [build]
+      functions = "functions"
+      publish = "public"
+
+   [[redirects]]
+      from = "/\*"
+      to = "/.netlify/functions/app"
+      status = 200
    ```
 
-5. **Démarrer le Serveur de Développement Front-End**
+5. **Démarrer le Serveur Back-End**
 
    ```bash
-   cd client
+   # init netlify in the project directory
+   npm install -g netlify-cli@11.4.0
+   netlify init
+
+   # "scripts" : { "dev": "netlify dev" }
    npm run dev
    ```
 
 6. **Accéder à l'Application**
-   - Front-End : Ouvrez `http://localhost:5173` dans votre navigateur.
-   - Back-End : L'API est accessible sur `http://localhost:5000`.
+
+   - Back-End : L'API est accessible sur `http://localhost:8888/`.
 
 ---
 
@@ -139,28 +130,18 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ### Back-End
 
-    backend/
-    ├── controllers/       # Logique pour gérer les routes
-    ├── models/            # Modèles MongoDB (Client, Livre, Emprunt, Categorie)
-    ├── routes/            # Routes API
-    ├── middlewares/       # Middlewares d'authentification et autres
-    ├── app.js             # Point d'entrée du serveur
-    └── .env               # Variables d'environnement
-
-### Front-End
-
-    frontend/
-    ├── src/
-    │   ├── components/    # Composants UI réutilisables
-    │   ├── features/      # Slices Redux et logique asynchrone
-    │   ├── pages/         # Pages de l'application (Accueil, Connexion, Livres, etc.)
-    │   ├── app/           # Configuration du store Redux
-    │   ├── api/           # Configuration de l'API Axios
-    │   ├── App.jsx        # Composant principal de l'application
-    │   ├── main.jsx       # Point d'entrée
-    │   └── index.css      # Styles globaux
-    ├── public/            # Assets statiques
-    └── vite.config.js     # Configuration de Vite
+    server/
+    ├── config/ # Configuration de la base de données et autres
+    ├── controllers/ # Logique pour gérer les routes
+    ├── functions/app.js # Configuration de l'application Express
+    ├── middlewares/ # Middlewares d'authentification et autres
+    ├── models/ # Modèles MongoDB (Client, Livre, Emprunt, Categorie)
+    ├── routes/ # Routes API
+    ├── .env # Variables d'environnement
+    ├── .gitignore # Fichiers et dossiers à ignorer dans Git
+    ├── netlify.toml # Configuration Netlify pour le déploiement
+    ├── package-lock.json # Dépendances exactes pour le projet Node.js
+    └── package.json # Dépendances et scripts npm
 
 ---
 
@@ -174,56 +155,56 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 - > Client Authentification Documentation [ici](https://gestion-bibliotique.apidog.io/register-a-new-client-13650961e0)
 
-- **Inscription** : `POST /api/clients/register`  
-  **Accès** : Public  
+- **Inscription** : `POST /api/clients/register`
+  **Accès** : Public
   **Description** : Permet à un nouveau client de s'inscrire.
 
-- **Connexion** : `POST /api/clients/login`  
-  **Accès** : Public  
+- **Connexion** : `POST /api/clients/login`
+  **Accès** : Public
   **Description** : Permet à un client de se connecter.
 
-- **Déconnexion** : `POST /api/clients/logout`  
-  **Accès** : Client  
+- **Déconnexion** : `POST /api/clients/logout`
+  **Accès** : Client
   **Description** : Permet à un client de se déconnecter.
 
 #### **_2 - Profil_**
 
 - > Client Profile Documentation [ici](https://gestion-bibliotique.apidog.io/update-client-profile-14025249e0)
 
-- **Mettre à Jour le Profil** : `PUT /api/clients/profile`  
-  **Accès** : Client  
+- **Mettre à Jour le Profil** : `PUT /api/clients/profile`
+  **Accès** : Client
   **Description** : Permet à un client de mettre à jour ses informations de profil.
 
 - **Changer le Mot de Passe** : `PUT /api/clients/password`
-  **Accès** : Client  
+  **Accès** : Client
   **Description** : Permet à un client de changer son mot de passe.
 
-- **Obtenir les Détails du Client** : `GET /api/clients/me`  
-  **Accès** : Client  
+- **Obtenir les Détails du Client** : `GET /api/clients/me`
+  **Accès** : Client
   **Description** : Récupère les détails du client connecté.
 
-- **Obtenir les Emprunts du Client** : `GET /api/clients/emprunts`  
-  **Accès** : Client  
+- **Obtenir les Emprunts du Client** : `GET /api/clients/emprunts`
+  **Accès** : Client
   **Description** : Récupère tous les emprunts du client connecté.
 
 #### **_3 - CRUD_**
 
 - > Clients CRUD Documentation [ici](https://gestion-bibliotique.apidog.io/get-all-clients-14027756e0)
 
-- **Obtenir Tous les Clients** : `GET /api/clients/`  
-  **Accès** : Admin  
+- **Obtenir Tous les Clients** : `GET /api/clients/`
+  **Accès** : Admin
   **Description** : Récupère la liste de tous les clients (pour les administrateurs).
 
-- **Obtenir un Client par ID** : `GET /api/clients/:id`  
-  **Accès** : Admin  
+- **Obtenir un Client par ID** : `GET /api/clients/:id`
+  **Accès** : Admin
   **Description** : Récupère les détails d'un client spécifique par son ID.
 
-- **Mettre à Jour un Client** : `PUT /api/clients/:id`  
-  **Accès** : Admin  
+- **Mettre à Jour un Client** : `PUT /api/clients/:id`
+  **Accès** : Admin
   **Description** : Permet à un administrateur de mettre à jour les informations d'un client.
 
-- **Supprimer un Client** : `DELETE /api/clients/:id`  
-  **Accès** : Admin  
+- **Supprimer un Client** : `DELETE /api/clients/:id`
+  **Accès** : Admin
   **Description** : Permet à un administrateur de supprimer un client.
 
 ---
@@ -232,24 +213,24 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 - > Livres Documentation [ici](https://gestion-bibliotique.apidog.io/get-all-books-14029046e0)
 
-- **Obtenir Tous les Livres** : `GET /api/livres`  
-  **Accès** : Public  
+- **Obtenir Tous les Livres** : `GET /api/livres`
+  **Accès** : Public
   **Description** : Récupère la liste de tous les livres disponibles.
 
-- **Obtenir un Livre par ID** : `GET /api/livres/:id`  
-  **Accès** : Public  
+- **Obtenir un Livre par ID** : `GET /api/livres/:id`
+  **Accès** : Public
   **Description** : Récupère les détails d'un livre spécifique par son ID.
 
-- **Ajouter un Livre** : `POST /api/livres`  
-  **Accès** : Admin uniquement  
+- **Ajouter un Livre** : `POST /api/livres`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur d'ajouter un nouveau livre.
 
-- **Mettre à Jour un Livre** : `PUT /api/livres/:id`  
-  **Accès** : Admin uniquement  
+- **Mettre à Jour un Livre** : `PUT /api/livres/:id`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur de mettre à jour les informations d'un livre existant.
 
-- **Supprimer un Livre** : `DELETE /api/livres/:id`  
-  **Accès** : Admin uniquement  
+- **Supprimer un Livre** : `DELETE /api/livres/:id`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur de supprimer un livre.
 
 ---
@@ -258,32 +239,32 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 - > Emprunts Documentation [ici](https://gestion-bibliotique.apidog.io/create-a-new-emprunt-14057301e0)
 
-- **Créer un Emprunt** : `POST /api/emprunts`  
-  **Accès** : Client uniquement  
+- **Créer un Emprunt** : `POST /api/emprunts`
+  **Accès** : Client uniquement
   **Description** : Permet à un client de créer un nouvel emprunt (emprunter un livre).
 
-- **Obtenir un Emprunt par ID** : `GET /api/emprunts/:id`  
-  **Accès** : Client ou Admin  
+- **Obtenir un Emprunt par ID** : `GET /api/emprunts/:id`
+  **Accès** : Client ou Admin
   **Description** : Récupère les détails d'un emprunt spécifique par son ID.
 
-- **Mettre à Jour un Emprunt** : `PUT /api/emprunts/:id`  
-  **Accès** : Admin uniquement  
+- **Mettre à Jour un Emprunt** : `PUT /api/emprunts/:id`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur de mettre à jour les informations d'un emprunt (par exemple, prolonger la date de retour).
 
-- **Supprimer un Emprunt** : `DELETE /api/emprunts/:id`  
-  **Accès** : Admin uniquement  
+- **Supprimer un Emprunt** : `DELETE /api/emprunts/:id`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur de supprimer un emprunt.
 
-- **Obtenir Tous les Emprunts** : `GET /api/emprunts`  
-  **Accès** : Admin uniquement  
+- **Obtenir Tous les Emprunts** : `GET /api/emprunts`
+  **Accès** : Admin uniquement
   **Description** : Récupère la liste de tous les emprunts (pour les administrateurs).
 
-- **Obtenir les Emprunts d'un Client** : `GET /api/emprunts/client/:clientId`  
-  **Accès** : Client ou Admin  
+- **Obtenir les Emprunts d'un Client** : `GET /api/emprunts/client/:clientId`
+  **Accès** : Client ou Admin
   **Description** : Récupère tous les emprunts d'un client spécifique. Un client ne peut accéder qu'à ses propres emprunts, tandis qu'un administrateur peut accéder à tous les emprunts.
 
-- **Retourner un Livre** : `POST /api/emprunts/:id/return`  
-  **Accès** : Client ou Admin  
+- **Retourner un Livre** : `POST /api/emprunts/:id/return`
+  **Accès** : Client ou Admin
   **Description** : Permet de marquer un emprunt comme retourné (rendre un livre).
 
 ---
@@ -292,26 +273,36 @@ _Visitez la documentation de l'API [ici](https://gestion-bibliotique.apidog.io/)
 
 - > Catégories Documentation [ici](https://gestion-bibliotique.apidog.io/get-all-categories-14128320e0)
 
-- **Obtenir Toutes les Catégories** : `GET /api/categories`  
-  **Accès** : Public  
+- **Obtenir Toutes les Catégories** : `GET /api/categories`
+  **Accès** : Public
   **Description** : Récupère la liste de toutes les catégories disponibles.
 
-- **Obtenir une Catégorie par ID** : `GET /api/categories/:id`  
-  **Accès** : Public  
+- **Obtenir une Catégorie par ID** : `GET /api/categories/:id`
+  **Accès** : Public
   **Description** : Récupère les détails d'une catégorie spécifique par son ID.
 
-- **Ajouter une Catégorie** : `POST /api/categories`  
-  **Accès** : Admin uniquement  
+- **Ajouter une Catégorie** : `POST /api/categories`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur d'ajouter une nouvelle catégorie.
 
-- **Mettre à Jour une Catégorie** : `PUT /api/categories/:id`  
-  **Accès** : Admin uniquement  
+- **Mettre à Jour une Catégorie** : `PUT /api/categories/:id`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur de mettre à jour les informations d'une catégorie existante.
 
-- **Supprimer une Catégorie** : `DELETE /api/categories/:id`  
-  **Accès** : Admin uniquement  
+- **Supprimer une Catégorie** : `DELETE /api/categories/:id`
+  **Accès** : Admin uniquement
   **Description** : Permet à un administrateur de supprimer une catégorie.
 
 ---
 
 ## Captures d'Écran
+
+![documentation1](./images/1.png)
+
+---
+
+![documentation2](./images/2.png)
+
+```
+
+```

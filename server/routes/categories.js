@@ -4,9 +4,9 @@ const router = Router();
 const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
-  addCategorie,
   getAllCategories,
   getCategorieById,
+  addCategorie,
   updateCategorie,
   deleteCategorie,
 } = require("../controllers/categories.controller");

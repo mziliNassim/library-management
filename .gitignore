@@ -10,6 +10,7 @@
 /server/dist
 /server/tmp
 /server/*.log
+/server/.netlify
 
 
 /client
