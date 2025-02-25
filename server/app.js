@@ -32,6 +32,7 @@ const listenServer = async () => {
     process.exit(1);
   }
 };
+
 listenServer();
 
 module.exports = app;
