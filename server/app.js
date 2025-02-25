@@ -11,6 +11,10 @@ app.use(express.json());
 dotenv.config();
 
 // Routes
+app.get("/", (req, res) => {
+  res.send("API is running...");
+});
+
 app.use("/api/livres", require("./routes/livres"));
 app.use("/api/clients", require("./routes/clients"));
 app.use("/api/categories", require("./routes/categories"));
@@ -30,4 +34,4 @@ const listenServer = async () => {
 };
 listenServer();
 
-module.exports = app; 
+module.exports = app;
