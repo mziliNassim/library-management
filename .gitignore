@@ -13,7 +13,6 @@
 /server/.netlify
 
 
-/client
 /client/.gitignore
 /clinet/.env
 /Client/node_modules

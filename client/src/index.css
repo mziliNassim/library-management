@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Home -- Animation keyframes */
+@keyframes animate {
+  0% {
+    background-position: 0%;
+  }
+  100% {
+    background-position: 200%;
+  }
+}
+
+.dark-mode {
+  --bg-color: var(--clr-surface-a0);
+  --text-color: var(--clr-light-a0);
+  --primary-color: var(--clr-primary-a30);
+  --section-bg: var(--clr-surface-a10);
+  --card-bg: var(--clr-surface-a20);
+}
+
+.light-mode {
+  --bg-color: var(--clr-light-a0);
+  --text-color: var(--clr-dark-a0);
+  --primary-color: var(--clr-primary-a30);
+  --section-bg: var(--clr-primary-a10);
+  --card-bg: white;
+}
