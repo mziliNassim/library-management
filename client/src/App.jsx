@@ -23,6 +23,7 @@ import AdminManageClientsDeatails from "./pages/AdminManageClientsDeatails.jsx";
 import AdminManageClientsEdit from "./pages/AdminManageClientsEdit.jsx";
 import AdminManageBooks from "./pages/AdminManageBooks.jsx";
 import AdminManageBooksCreate from "./pages/AdminManageBooksCreate.jsx";
+import BooksDetails from "./pages/BooksDetails.jsx";
 
 const App = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -63,6 +64,7 @@ const App = () => {
 
               {/* Books */}
               <Route path="/discover/books" element={<Books />} />
+              <Route path="/discover/books/:id" element={<BooksDetails />} />
 
               {/* User */}
               <Route path="/user/profile" element={<UserProfile />} />
