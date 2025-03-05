@@ -6,7 +6,7 @@ const Footer = () => {
   const darkMode = useSelector((state) => state.theme.darkMode);
 
   return (
-    <footer className=" transition duration-300 bg-white dark:bg-[#111827] text-gray-950 dark:text-white shadow-inner">
+    <footer className="transition duration-300 bg-white dark:bg-[#111827] text-gray-950 dark:text-white shadow-inner">
       <div className="container w-10/12  mx-auto px-6 py-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}

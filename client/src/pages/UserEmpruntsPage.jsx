@@ -42,7 +42,10 @@ const UserEmpruntsPage = () => {
           setMyDbEmprunts(myEmprunts);
         }
       } catch (error) {
-        setMessage("Error fetching emprunts !");
+        setMessage(
+          error?.response?.data?.message &&
+            "Aucun emprunt en cours ou historique!"
+        );
       } finally {
         setLoading(false);
       }

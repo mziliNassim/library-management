@@ -92,13 +92,14 @@ const UserSideBar = () => {
             </NavLink>
           ))}
 
-          <hr className="bg-gray-400 w-5/6 mx-auto" />
-
-          {adminNavItems.map((item, index) => (
-            <NavLink
-              key={index}
-              to={item.to}
-              className={({ isActive }) => `
+          {user.role === "admin" && (
+            <>
+              <hr className="bg-gray-400 w-5/6 mx-auto" />
+              {adminNavItems.map((item, index) => (
+                <NavLink
+                  key={index}
+                  to={item.to}
+                  className={({ isActive }) => `
               w-full flex items-center gap-3 py-3 px-4 rounded-lg transition-all duration-300 group
               ${
                 isActive
@@ -106,12 +107,12 @@ const UserSideBar = () => {
                   : "text-gray-700 dark:text-gray-300 hover:bg-purple-50 dark:hover:bg-gray-700 hover:text-purple-600 dark:hover:text-purple-300"
               }
             `}
-            >
-              {({ isActive }) => (
-                <>
-                  <item.icon
-                    size={20}
-                    className={`
+                >
+                  {({ isActive }) => (
+                    <>
+                      <item.icon
+                        size={20}
+                        className={`
                     transition-colors duration-300
                     ${
                       isActive
@@ -119,12 +120,14 @@ const UserSideBar = () => {
                         : "text-purple-500 group-hover:text-purple-600 dark:text-purple-300 dark:group-hover:text-purple-200"
                     }
                   `}
-                  />
-                  <span className="flex-grow">{item.label}</span>
-                </>
-              )}
-            </NavLink>
-          ))}
+                      />
+                      <span className="flex-grow">{item.label}</span>
+                    </>
+                  )}
+                </NavLink>
+              ))}
+            </>
+          )}
 
           {/* Logout Option */}
           <div className="border-t border-gray-200 dark:border-gray-700 mt-4 pt-4">
