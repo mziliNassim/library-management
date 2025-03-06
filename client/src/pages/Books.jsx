@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 
 import BookCard from "../components/UI/BookCardDiscover";
+import { Link } from "react-router-dom";
 
 const Books = () => {
   // State for books data
@@ -437,13 +438,13 @@ const Books = () => {
 
               {/* Overlay actions */}
               <div className="absolute top-2 right-2 flex space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                <button
-                  onClick={() => handleViewDetails(book)}
+                <Link
+                  to={`/discover/books/${book._id}`}
                   className="p-2 bg-indigo-500 text-white rounded-full shadow-lg hover:bg-indigo-600"
                   title="View details"
                 >
                   <Eye size={16} />
-                </button>
+                </Link>
                 {book.quantite > 0 ? (
                   <button
                     onClick={() => handleBorrowClick(book)}

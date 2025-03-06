@@ -1,11 +1,9 @@
-import React, { use, useState } from "react";
+import React, { useState } from "react";
 
 const BooksDetails = () => {
-  const [bookInfos, setbookInfos] = useState(second);
+  const [bookDetails, setBookDetails] = useState({});
 
-  useEffect(() => {}, []);
-
-  return <div></div>;
+  return <div>BooksDetails</div>;
 };
 
 export default BooksDetails;
