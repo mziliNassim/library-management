@@ -24,11 +24,13 @@ const UserCard = ({ user, viewMode, fetchUsers }) => {
     }
   };
 
+  const handleAlert = () => window.alert(`This feature is not implemented yet`);
+
   return (
     <>
       {isDeleteModalOpen && (
         <DeleteConfirmationModal
-          handleDeleteUser={handleDeleteUser}
+          handleDelete={handleDeleteUser}
           setIsDeleteModalOpen={setIsDeleteModalOpen}
           loading={loadingDelete}
         />
@@ -114,7 +116,8 @@ const UserCard = ({ user, viewMode, fetchUsers }) => {
         >
           {/* detials */}
           <Link
-            to={`/admin/manage-clients/${user._id}`}
+            onClick={handleAlert}
+            // to={`/admin/manage-clients/${user._id}`}
             className="text-blue-500 hover:bg-blue-100 p-2 rounded-full"
           >
             <Eye size={20} />
@@ -122,7 +125,8 @@ const UserCard = ({ user, viewMode, fetchUsers }) => {
 
           {/* edit */}
           <Link
-            to={`/admin/manage-clients/edit/${user._id}`}
+            onClick={handleAlert}
+            // to={`/admin/manage-clients/edit/${user._id}`}
             className="text-green-500 hover:bg-green-100 p-2 rounded-full"
           >
             <Edit size={20} />

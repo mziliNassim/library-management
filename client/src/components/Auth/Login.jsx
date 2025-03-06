@@ -8,8 +8,8 @@ const Login = ({ onLogin }) => {
   const [resetEmail, setResetEmail] = useState(""); // Email for password reset
   const [resetMessage, setResetMessage] = useState(""); // Reset email response
   const [data, setData] = useState({
-    email: "nassim@gmail.com",
-    password: "Nassim123",
+    email: "",
+    password: "",
   });
 
   const handleChange = (e) => {

@@ -130,10 +130,7 @@ function Home() {
           </div>
 
           {/* Service Card 3 */}
-          <div
-            whileHover={{ scale: 1.05 }}
-            className="shadow-lg p-6 rounded-lg text-center bg-white dark:bg-[#1e293b] backdrop-blur-sm bg-opacity-50"
-          >
+          <div className="shadow-lg p-6 rounded-lg text-center bg-white dark:bg-[#1e293b] backdrop-blur-sm bg-opacity-50">
             <div className="p-4 rounded-full inline-block mb-4 bg-[#8961b3] opacity-80">
               <BookOpen className="h-8 w-8 text-[#000]" />
             </div>

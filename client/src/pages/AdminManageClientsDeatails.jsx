@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import UserSideBar from "../components/UI/UserSideBar";
-import DeleteConfirmationModal from "../components/UI/DeleteConfirmationModal.jsx";
+import DeleteConfirmationModal from "../components/UI/DeleteConfirmationModal";
 import { useSelector } from "react-redux";
 import { clientsApiURL } from "../services/api";
 import axios from "axios";
@@ -83,9 +83,10 @@ const AdminManageClientDetails = () => {
     <>
       {isDeleteModalOpen && (
         <DeleteConfirmationModal
-          handleDeleteUser={handleDeleteUser}
+          handleDelete={handleDeleteUser}
           setIsDeleteModalOpen={setIsDeleteModalOpen}
           loading={loadingDelete}
+          type="user"
         />
       )}
 

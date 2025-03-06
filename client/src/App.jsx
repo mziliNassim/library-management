@@ -11,19 +11,30 @@ import Loader from "./components/UI/Loader.jsx";
 
 import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
+
 import Home from "./pages/Home.jsx";
 import Books from "./pages/Books.jsx";
+import BooksDetails from "./pages/BooksDetails.jsx";
+import NotFound from "./pages/NotFound.jsx";
+
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
-import NotFound from "./pages/NotFound.jsx";
+
 import UserProfile from "./pages/ProfilePage.jsx";
 import UserEmprunts from "./pages/UserEmpruntsPage.jsx";
+import UserBooksWishlist from "./pages/UserBooksWishlist.jsx";
+
 import AdminManageClients from "./pages/AdminManageClients.jsx";
 import AdminManageClientsDeatails from "./pages/AdminManageClientsDeatails.jsx";
 import AdminManageClientsEdit from "./pages/AdminManageClientsEdit.jsx";
+
 import AdminManageBooks from "./pages/AdminManageBooks.jsx";
+import AdminManageBooksEdit from "./pages/AdminManageBooksEdit.jsx";
+import AdminManageBooksDeatails from "./pages/AdminManageBooksDeatails.jsx";
 import AdminManageBooksCreate from "./pages/AdminManageBooksCreate.jsx";
-import BooksDetails from "./pages/BooksDetails.jsx";
+
+import AdminManageCategories from "./pages/AdminManageCategories.jsx";
+import AdminManageCategoriesCreate from "./pages/AdminManageCategoriesCreate.jsx";
 
 const App = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -69,6 +80,10 @@ const App = () => {
               {/* User */}
               <Route path="/user/profile" element={<UserProfile />} />
               <Route path="/user/emprunts" element={<UserEmprunts />} />
+              <Route
+                path="/user/books-wishlist"
+                element={<UserBooksWishlist />}
+              />
 
               {/* Admin */}
               <Route
@@ -83,13 +98,31 @@ const App = () => {
                 path="/admin/manage-clients/edit/:id"
                 element={<AdminManageClientsEdit />}
               />
+
               <Route
                 path="/admin/manage-books"
                 element={<AdminManageBooks />}
               />
               <Route
+                path="/admin/manage-books/edit/:id"
+                element={<AdminManageBooksEdit />}
+              />
+              <Route
+                path="/admin/manage-books/:id"
+                element={<AdminManageBooksDeatails />}
+              />
+
+              <Route
                 path="/admin/manage-books/create"
                 element={<AdminManageBooksCreate />}
+              />
+              <Route
+                path="/admin/manage-categories"
+                element={<AdminManageCategories />}
+              />
+              <Route
+                path="/admin/manage-categories/create"
+                element={<AdminManageCategoriesCreate />}
               />
 
               {/* Legal */}

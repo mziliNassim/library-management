@@ -2,9 +2,10 @@ import React from "react";
 import { AlertTriangle } from "lucide-react";
 
 const DeleteConfirmationModal = ({
-  handleDeleteUser,
+  handleDelete,
   setIsDeleteModalOpen,
   loading,
+  type,
 }) => {
   return (
     <>
@@ -17,7 +18,7 @@ const DeleteConfirmationModal = ({
             </h2>
           </div>
           <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
-            Are you sure you want to delete this user? This action cannot be
+            Are you sure you want to delete this {type}? This action cannot be
             undone.
           </p>
           <div className="flex space-x-4">
@@ -28,7 +29,7 @@ const DeleteConfirmationModal = ({
               Cancel
             </button>
             <button
-              onClick={handleDeleteUser}
+              onClick={handleDelete}
               disabled={loading}
               className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors"
             >

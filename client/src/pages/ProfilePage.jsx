@@ -2,7 +2,6 @@ import React, { useMemo, useState } from "react";
 import { Camera, Upload, User, Mail, MapPin } from "lucide-react";
 import UserSideBar from "../components/UI/UserSideBar";
 import { useSelector } from "react-redux";
-import { avatar } from "../services/data";
 import axios from "axios";
 import { clientsApiURL } from "../services/api";
 
@@ -13,7 +12,6 @@ const ProfileEditPage = () => {
     nom: user?.nom,
     email: user?.email,
     adresse: user?.adresse,
-    avatar: avatar,
   });
 
   // Authentification Required
@@ -34,7 +32,7 @@ const ProfileEditPage = () => {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setFormData({ ...formData, avatar: reader.result });
+      setFormData(formData);
     };
   };
 
@@ -50,7 +48,7 @@ const ProfileEditPage = () => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${user.token}`,
         },
-        body: { ...formData, avatar: undefined },
+        body: formData,
       });
       console.log(" handleSubmit ~ response:", response.data);
     } catch (error) {
@@ -144,7 +142,7 @@ const ProfileEditPage = () => {
                 </label>
                 <div className="flex items-center space-x-4">
                   <img
-                    src={formData?.avatar}
+                    src={`https://ui-avatars.com/api/?name=${user.nom}&background=random`}
                     alt="Profile"
                     className="w-24 h-24 rounded-full object-cover border-4 border-white dark:border-gray-700 shadow-md"
                   />

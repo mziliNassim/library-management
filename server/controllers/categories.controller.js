@@ -2,7 +2,6 @@ const Categorie = require("../models/Categorie");
 
 const getAllCategories = async (req, res) => {
   try {
-    SSS;
     const categories = await Categorie.find({});
     if (categories.length === 0)
       return res.status(404).json({
@@ -11,7 +10,7 @@ const getAllCategories = async (req, res) => {
         data: { categories: [] },
       });
     return res.status(200).json({
-      success: false,
+      success: true,
       message: "All categories fetched successfully!",
       data: { categories },
     });

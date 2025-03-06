@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { LogOut } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
-import { avatar, clientNavItems, adminNavItems } from "../../services/data";
+import { clientNavItems, adminNavItems } from "../../services/data";
 import { clientsApiURL } from "../../services/api";
 import { clearUser } from "../../features/UserSlice";
 
@@ -45,7 +45,7 @@ const UserSideBar = () => {
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
               <img
-                src={user?.avatar || avatar}
+                src={`https://ui-avatars.com/api/?name=${user?.nom}&background=random`}
                 alt="Profile"
                 className="w-28 h-28 rounded-full object-cover border-4 border-white/20 shadow-lg transform hover:scale-105 transition-transform duration-300"
               />

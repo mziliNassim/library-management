@@ -7,10 +7,10 @@ const Register = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
   const [alert, setAlert] = useState("");
   const [data, setData] = useState({
-    nom: "imane imane",
-    email: "imane@gmail.com",
-    password: "Imane123",
-    confirmPassword: "Imane123",
+    nom: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
   });
 
   const handleChange = (e) => {

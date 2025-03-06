@@ -1,79 +1,44 @@
 import React, { useEffect, useState } from "react";
 import UserSideBar from "../components/UI/UserSideBar";
-import BookCard from "../components/UI/BookCard.jsx";
+import CategorieCard from "../components/UI/CategorieCard.jsx";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-import { Search, Filter, X, Plus, Grid, List } from "lucide-react";
+import { Search, X, Plus, Grid, List } from "lucide-react";
+import { categoriesApiURL } from "../services/api.js";
 
-const AdminManageBooks = () => {
-  const [books, setBooks] = useState([]);
+const AdminManageCategories = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [categoryFilter, setCategoryFilter] = useState("");
-  const [langueFilter, setLangueFilter] = useState("");
-  const [disponibleFilter, setDisponibleFilter] = useState("");
-  const [viewMode, setViewMode] = useState("grid");
-
-  // Fetch Books
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await axios.get(
-          "https://gestion-bibliotique-pfe.netlify.app/api/livres"
-        );
-        setBooks(response.data.data.livres);
-      } catch (error) {
-        setMessage("Error fetching books!");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
+  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'row'
 
   // Fetch Categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(
-          "https://gestion-bibliotique-pfe.netlify.app/api/categories/"
-        );
-        setCategories(response.data?.data?.categories);
-      } catch (error) {
-        setMessage("Error fetching categories!");
-      }
-    };
+  const fetchCategories = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${categoriesApiURL}/`);
+      setCategories(response.data?.data?.categories);
+    } catch (error) {
+      setMessage("Error fetching categories!");
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchCategories();
   }, []);
 
-  // Filtered Books
-  const filteredBooks = books.filter((book) => {
-    const matchesSearch = book.titre
+  // Filtered categories by name
+  const filteredCategories = categories.filter((categorie) => {
+    const matchesSearch = categorie.nom
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter
-      ? book.categorie === categoryFilter
-      : true;
-    const matchesLangue = langueFilter ? book.langue === langueFilter : true;
-    const matchesDisponible = disponibleFilter ? book.quantite > 0 : true;
 
-    return (
-      matchesSearch && matchesCategory && matchesLangue && matchesDisponible
-    );
+    return matchesSearch;
   });
-
-  // Reset Filters
-  const resetFilters = () => {
-    setSearchTerm("");
-    setCategoryFilter("");
-    setLangueFilter("");
-    setDisponibleFilter("");
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 ease-in-out">
@@ -85,7 +50,7 @@ const AdminManageBooks = () => {
             {/* Header Section */}
             <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                Books Management
+                Categories Management
               </h2>
               <div className="flex items-center space-x-4">
                 {/* View Mode Toggle */}
@@ -112,13 +77,13 @@ const AdminManageBooks = () => {
                   </button>
                 </div>
 
-                {/* Add Book Button */}
+                {/* Add Categorie Button */}
                 <Link
-                  to="/admin/manage-books/create"
+                  to="/admin/manage-categories/create"
                   className="flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                 >
                   <Plus size={20} className="mr-2" />
-                  Add New Book
+                  Add New Category
                 </Link>
               </div>
             </div>
@@ -141,68 +106,10 @@ const AdminManageBooks = () => {
                   />
                 </div>
 
-                {/* Category Filter */}
-                <div className="relative">
-                  <select
-                    value={categoryFilter}
-                    onChange={(e) => setCategoryFilter(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">All Categories</option>
-                    {categories.map((category) => (
-                      <option key={category._id} value={category._id}>
-                        {category.nom}
-                      </option>
-                    ))}
-                  </select>
-                  <Filter
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={20}
-                  />
-                </div>
-
-                {/* Language Filter */}
-                <div className="relative">
-                  <select
-                    value={langueFilter}
-                    onChange={(e) => setLangueFilter(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">All Languages</option>
-                    <option value="Français">Français</option>
-                    <option value="Anglais">Anglais</option>
-                    {/* Add more languages as needed */}
-                  </select>
-                  <Filter
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={20}
-                  />
-                </div>
-
-                {/* Disponible Filter */}
-                <div className="relative">
-                  <select
-                    value={disponibleFilter}
-                    onChange={(e) => setDisponibleFilter(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
-                  >
-                    <option value="">All</option>
-                    <option value="true">Available</option>
-                    <option value="false">Unavailable</option>
-                  </select>
-                  <Filter
-                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
-                    size={20}
-                  />
-                </div>
-
                 {/* Reset Filters */}
-                {(searchTerm ||
-                  categoryFilter ||
-                  langueFilter ||
-                  disponibleFilter) && (
+                {searchTerm && (
                   <button
-                    onClick={resetFilters}
+                    onClick={() => setSearchTerm("")}
                     className="flex items-center justify-center p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
                   >
                     <X size={20} />
@@ -211,7 +118,7 @@ const AdminManageBooks = () => {
               </div>
             </div>
 
-            {/* Books List */}
+            {/* Categories List */}
             <div className="p-6 max-h-screen overflow-y-auto">
               {loading ? (
                 <div className="text-center py-12 text-gray-500 dark:text-gray-400">
@@ -235,9 +142,9 @@ const AdminManageBooks = () => {
                     <span className="sr-only">Loading...</span>
                   </div>
                 </div>
-              ) : filteredBooks.length === 0 ? (
+              ) : filteredCategories.length === 0 ? (
                 <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                  {message || "No books found!"}
+                  {message || "No categorie found!"}
                 </div>
               ) : (
                 <div
@@ -247,8 +154,13 @@ const AdminManageBooks = () => {
                       : "space-y-6"
                   }`}
                 >
-                  {filteredBooks.map((book) => (
-                    <BookCard key={book._id} book={book} viewMode={viewMode} />
+                  {filteredCategories.map((categorie) => (
+                    <CategorieCard
+                      key={categorie._id}
+                      categorie={categorie}
+                      viewMode={viewMode}
+                      fetchCategories={fetchCategories}
+                    />
                   ))}
                 </div>
               )}
@@ -260,4 +172,4 @@ const AdminManageBooks = () => {
   );
 };
 
-export default AdminManageBooks;
+export default AdminManageCategories;

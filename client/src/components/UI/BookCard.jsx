@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Edit,
   Trash,
@@ -11,8 +11,11 @@ import {
   Box,
   FileText,
 } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const BookCard = ({ book, viewMode }) => {
+  const [loading, setLoading] = useState(false);
+
   // Get a color based on the first letter of the book title
   const getColorClass = (letter) => {
     const colors = [
@@ -33,6 +36,16 @@ const BookCard = ({ book, viewMode }) => {
     if (age < 30) return "Modern";
     if (age < 70) return "Classic";
     return "Vintage";
+  };
+
+  const handleAlert = () => window.alert(`This feature is not implemented yet`);
+
+  const handleDelete = (id) => {
+    setLoading(true);
+    window.alert(
+      `Deleting book with ID: ${id}\n This feature is not implemented yet`
+    );
+    setLoading(false);
   };
 
   return (
@@ -123,19 +136,36 @@ const BookCard = ({ book, viewMode }) => {
         {/* Action buttons with tooltip-style labels */}
         <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
           <div className="flex space-x-2">
-            <button className="group relative p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-colors">
+            {/* View details */}
+            <Link
+              // to={`/admin/manage-books/${book._id}`}
+              onClick={handleAlert}
+              className="group relative p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-colors"
+            >
               <Eye size={16} />
               <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 View details
               </span>
-            </button>
-            <button className="group relative p-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800/50 transition-colors">
+            </Link>
+
+            {/* Edit book */}
+            <Link
+              onClick={handleAlert}
+              // to={`/admin/manage-books/edit/${book._id}`}
+              className="group relative p-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800/50 transition-colors"
+            >
               <Edit size={16} />
               <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Edit book
               </span>
-            </button>
-            <button className="group relative p-2 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 rounded-lg hover:bg-rose-200 dark:hover:bg-rose-800/50 transition-colors">
+            </Link>
+
+            {/* Delete */}
+            <button
+              disabled={loading}
+              onClick={() => handleDelete(book._id)}
+              className="group relative p-2 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 rounded-lg hover:bg-rose-200 dark:hover:bg-rose-800/50 transition-colors"
+            >
               <Trash size={16} />
               <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                 Delete

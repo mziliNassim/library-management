@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { toggleTheme } from "../../features/themeSlice";
-import { navigation } from "../../services/data";
+import { adminNavItems, clientNavItems, navigation } from "../../services/data";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -197,7 +197,7 @@ const Navbar = () => {
                   }`}
                   id="user-dropdown"
                 >
-                  <div className="px-4 py-3 border-b">
+                  <div className="px-4 py-3 border-b border-gray-300 dark:border-gray-600 ">
                     <span className="block text-sm text-gray-900 dark:text-white">
                       {user.nom}
                     </span>
@@ -206,62 +206,36 @@ const Navbar = () => {
                     </span>
                   </div>
 
-                  <ul className="py-2" aria-labelledby="user-menu-button">
-                    <li>
-                      <Link
-                        to="/user/profile"
-                        className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        Profile
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        to="/user/emprunts"
-                        className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                      >
-                        My Emprunts
-                      </Link>
-                    </li>
-                    {user.role === "admin" && (
+                  <ul className="pb-2 pt-0" aria-labelledby="user-menu-button">
+                    {clientNavItems &&
+                      clientNavItems.map((navLink, index) => (
+                        <li key={index}>
+                          <Link
+                            to={navLink.to}
+                            className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                          >
+                            {navLink.label}
+                          </Link>
+                        </li>
+                      ))}
+
+                    {adminNavItems && user.role === "admin" && (
                       <>
-                        <li>
-                          <Link
-                            to="/admin/manage-clients"
-                            className="flex items-center justify-between rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                          >
-                            <span>Manage Clients</span>
-                            <span className="rounded-full bg-green-600 px-2 py-1 text-xs font-medium text-white">
-                              A
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/admin/manage-books"
-                            className="flex items-center justify-between rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                          >
-                            <span>Manage Books</span>
-                            <span className="rounded-full bg-green-600 px-2 py-1 text-xs font-medium text-white">
-                              A
-                            </span>
-                          </Link>
-                        </li>
-                        <li>
-                          <Link
-                            to="/admin/manage-categories"
-                            className="flex items-center justify-between rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                          >
-                            <span>Manage Categories</span>
-                            <span className="rounded-full bg-green-600 px-2 py-1 text-xs font-medium text-white">
-                              A
-                            </span>
-                          </Link>
-                        </li>
+                        <hr className="border-gray-300 dark:border-gray-600" />
+                        {adminNavItems.map((navLink, index) => (
+                          <li key={index}>
+                            <Link
+                              to={navLink.to}
+                              className="block rounded px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                            >
+                              {navLink.label}
+                            </Link>
+                          </li>
+                        ))}
                       </>
                     )}
 
-                    <li className="mt-2">
+                    <li className="mt-2 border-t border-gray-300 dark:border-gray-600 pt-2">
                       <button
                         disabled={logoutLoding}
                         onClick={handleLogout}

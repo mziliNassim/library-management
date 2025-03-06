@@ -5,8 +5,9 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { Search, Filter, X, Plus, Grid, List } from "lucide-react";
+import { categoriesApiURL, livresApiURL } from "../services/api.js";
 
-const AdminManageBooks = () => {
+const UserBooksWishlist = () => {
   const [books, setBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -15,15 +16,13 @@ const AdminManageBooks = () => {
   const [categoryFilter, setCategoryFilter] = useState("");
   const [langueFilter, setLangueFilter] = useState("");
   const [disponibleFilter, setDisponibleFilter] = useState("");
-  const [viewMode, setViewMode] = useState("grid");
+  const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'row'
 
   // Fetch Books
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const response = await axios.get(
-          "https://gestion-bibliotique-pfe.netlify.app/api/livres"
-        );
+        const response = await axios.get(`${livresApiURL}/wishlist`);
         setBooks(response.data.data.livres);
       } catch (error) {
         setMessage("Error fetching books!");
@@ -39,9 +38,7 @@ const AdminManageBooks = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get(
-          "https://gestion-bibliotique-pfe.netlify.app/api/categories/"
-        );
+        const response = await axios.get(`${categoriesApiURL}/`);
         setCategories(response.data?.data?.categories);
       } catch (error) {
         setMessage("Error fetching categories!");
@@ -85,7 +82,7 @@ const AdminManageBooks = () => {
             {/* Header Section */}
             <div className="p-6 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
               <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
-                Books Management
+                Books Wishlist
               </h2>
               <div className="flex items-center space-x-4">
                 {/* View Mode Toggle */}
@@ -111,15 +108,6 @@ const AdminManageBooks = () => {
                     <List size={20} />
                   </button>
                 </div>
-
-                {/* Add Book Button */}
-                <Link
-                  to="/admin/manage-books/create"
-                  className="flex items-center justify-center p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
-                >
-                  <Plus size={20} className="mr-2" />
-                  Add New Book
-                </Link>
               </div>
             </div>
 
@@ -236,8 +224,25 @@ const AdminManageBooks = () => {
                   </div>
                 </div>
               ) : filteredBooks.length === 0 ? (
-                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                  {message || "No books found!"}
+                // <div className="text-center py-12 text-gray-500 dark:text-gray-400">
+                //   {message || "No books found!"}
+                // </div>
+                <div
+                  className={`${
+                    viewMode === "grid"
+                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
+                      : "space-y-6"
+                  }`}
+                >
+                  <h1 className="text-red-500 text-4xl md:text-8xl font-bold text-center col-span-2 pt-5">
+                    404
+                  </h1>
+                  <h3 className="text-red-500 text-xl font-bold text-center col-span-2">
+                    This Earia is under fixing!!
+                  </h3>
+                  {/* {filteredBooks.map((book) => (
+                    <BookCard key={book._id} book={book} viewMode={viewMode} />
+                  ))} */}
                 </div>
               ) : (
                 <div
@@ -247,9 +252,15 @@ const AdminManageBooks = () => {
                       : "space-y-6"
                   }`}
                 >
-                  {filteredBooks.map((book) => (
+                  <h1 className="text-red-500 text-4xl md:text-8xl font-bold text-center col-span-2 pt-5">
+                    404
+                  </h1>
+                  <h3 className="text-red-500 text-xl font-bold text-center col-span-2">
+                    This Earia is under fixing!!
+                  </h3>
+                  {/* {filteredBooks.map((book) => (
                     <BookCard key={book._id} book={book} viewMode={viewMode} />
-                  ))}
+                  ))} */}
                 </div>
               )}
             </div>
@@ -260,4 +271,4 @@ const AdminManageBooks = () => {
   );
 };
 
-export default AdminManageBooks;
+export default UserBooksWishlist;
