@@ -7,6 +7,7 @@ import axios from "axios";
 
 const UserEmpruntsPage = () => {
   const { user } = useSelector((state) => state.user);
+
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(true);
   const [myDbEmprunts, setMyDbEmprunts] = useState([]);
@@ -36,7 +37,8 @@ const UserEmpruntsPage = () => {
               const response = await axios.get(`${livresApiURL}/${livreId}`);
               emprunt.livre = response.data.data?.livre;
             } catch (error) {
-              console.log("Error fetching livre data:", error);
+              setMessage(error.message);
+              return;
             }
           }
           setMyDbEmprunts(myEmprunts);

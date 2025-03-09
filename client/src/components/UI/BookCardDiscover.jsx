@@ -7,6 +7,7 @@ import {
   Globe,
   Box,
   FileText,
+  Tag,
 } from "lucide-react";
 
 const BookCardDiscover = ({ book, viewMode }) => {
@@ -60,6 +61,7 @@ const BookCardDiscover = ({ book, viewMode }) => {
           </div>
         </div>
       </div>
+
       {/* Book details */}
       <div
         className={`flex-1 flex flex-col bg-white dark:bg-gray-800 p-5 ${
@@ -94,6 +96,11 @@ const BookCardDiscover = ({ book, viewMode }) => {
             <div className="flex items-center text-xs bg-purple-100 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 px-2 py-1 rounded-full">
               <Box className="h-3 w-3 mr-1" />
               {book.quantite}
+            </div>
+            {/* Added category badge */}
+            <div className="flex items-center text-xs bg-green-100 dark:bg-green-900/40 text-green-800 dark:text-green-300 px-2 py-1 rounded-full">
+              <Tag className="h-3 w-3 mr-1" />
+              {book.categorie}
             </div>
           </div>
           {viewMode === "row" && (

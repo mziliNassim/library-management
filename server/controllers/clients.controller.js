@@ -38,7 +38,6 @@ const register = async (req, res) => {
     const token = await auth.generateToken(client);
 
     client.password = undefined;
-    client.active = undefined;
     client.__v = undefined;
 
     return res.status(201).json({
@@ -82,7 +81,6 @@ const login = async (req, res) => {
     const token = await auth.generateToken(client);
 
     client.password = undefined;
-    client.active = undefined;
     client.__v = undefined;
 
     return res.status(200).json({
@@ -129,26 +127,52 @@ const updateProfile = async (req, res) => {
       allowedUpdates.includes(update)
     );
 
+    // Check if the updates are valid
     if (!isValidOperation) {
       return res
         .status(400)
         .json({ success: false, message: "Invalid updates!", data: null });
     }
 
+    // Check if the email is being updated
+    if (updates.includes("email")) {
+      const newEmail = req.body.email;
+
+      // Check if the new email already exists in the database
+      const emailExists = await Client.emailExists(newEmail);
+
+      // If the email exists and belongs to a different client, return an error
+      if (
+        emailExists &&
+        emailExists._id.toString() !== req.client._id.toString()
+      ) {
+        return res
+          .status(400)
+          .json({ success: false, message: "Invalid Email!", data: null });
+      }
+    }
+
+    // Update the client's fields
     updates.forEach((update) => (req.client[update] = req.body[update]));
-    await req.client.save();
 
-    req.client.password = undefined;
-    req.client.active = undefined;
-    req.client.__v = undefined;
+    // Save the updated client
+    const client = await Client.findByIdAndUpdate(req.client._id, req.client, {
+      new: true, // Return the updated document
+      runValidators: true, // Run schema validators on update
+    });
 
+    // Remove sensitive fields from the response
+    client.password = undefined;
+    client.__v = undefined;
+
+    // Return success response
     return res.status(200).json({
       success: true,
       message: "Profile updated successfully!",
-      data: { client: req.client },
+      data: { client },
     });
   } catch (error) {
-    res
+    return res
       .status(500)
       .json({ success: false, message: error.message, data: null });
   }
@@ -216,7 +240,6 @@ const getClientDetails = async (req, res) => {
     const client = req.client;
 
     client.password = undefined;
-    client.active = undefined;
     client.__v = undefined;
 
     return res.status(200).json({
@@ -270,7 +293,6 @@ const getAllClients = async (req, res) => {
 
     clients.map((client) => {
       client.password = undefined;
-      client.active = undefined;
       client.__v = undefined;
       return client;
     });
@@ -298,7 +320,6 @@ const getClientById = async (req, res) => {
         .json({ success: false, message: "Client not found!", data: null });
 
     client.password = undefined;
-    client.active = undefined;
     client.__v = undefined;
 
     return res.status(200).json({
@@ -327,7 +348,6 @@ const updateClient = async (req, res) => {
         .json({ success: false, message: "Client not found!", data: null });
 
     client.password = undefined;
-    client.active = undefined;
     client.__v = undefined;
 
     return res.status(200).json({
@@ -351,7 +371,6 @@ const deleteClient = async (req, res) => {
         .json({ success: false, message: "Client not found!", data: null });
 
     client.password = undefined;
-    client.active = undefined;
     client.__v = undefined;
 
     return res.status(200).json({

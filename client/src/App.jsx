@@ -70,60 +70,61 @@ const App = () => {
               <Route path="/" element={<Home />} />
 
               {/* Authentification */}
-              <Route path="/auth/register" element={<Register />} />
-              <Route path="/auth/signin" element={<Login />} />
+              <Route path="/auth">
+                <Route path="" element={<Register />} />
+                <Route path="register" element={<Register />} />
+                <Route path="signin" element={<Login />} />
+              </Route>
 
               {/* Books */}
-              <Route path="/discover/books" element={<Books />} />
-              <Route path="/discover/books/:id" element={<BooksDetails />} />
+              <Route path="/discover">
+                <Route path="" element={<Books />} />
+                <Route path="books" element={<Books />} />
+                <Route path="books/:id" element={<BooksDetails />} />
+              </Route>
 
               {/* User */}
-              <Route path="/user/profile" element={<UserProfile />} />
-              <Route path="/user/emprunts" element={<UserEmprunts />} />
-              <Route
-                path="/user/books-wishlist"
-                element={<UserBooksWishlist />}
-              />
+              <Route path="/user">
+                <Route path="" element={<UserProfile />} />
+                <Route path="profile" element={<UserProfile />} />
+                <Route path="emprunts" element={<UserEmprunts />} />
+                <Route path="books-wishlist" element={<UserBooksWishlist />} />
+              </Route>
 
               {/* Admin */}
-              <Route
-                path="/admin/manage-clients"
-                element={<AdminManageClients />}
-              />
-              <Route
-                path="/admin/manage-clients/:id"
-                element={<AdminManageClientsDeatails />}
-              />
-              <Route
-                path="/admin/manage-clients/edit/:id"
-                element={<AdminManageClientsEdit />}
-              />
-
-              <Route
-                path="/admin/manage-books"
-                element={<AdminManageBooks />}
-              />
-              <Route
-                path="/admin/manage-books/edit/:id"
-                element={<AdminManageBooksEdit />}
-              />
-              <Route
-                path="/admin/manage-books/:id"
-                element={<AdminManageBooksDeatails />}
-              />
-
-              <Route
-                path="/admin/manage-books/create"
-                element={<AdminManageBooksCreate />}
-              />
-              <Route
-                path="/admin/manage-categories"
-                element={<AdminManageCategories />}
-              />
-              <Route
-                path="/admin/manage-categories/create"
-                element={<AdminManageCategoriesCreate />}
-              />
+              <Route path="/admin">
+                <Route path="" element={<AdminManageClients />} />
+                <Route path="manage-clients" element={<AdminManageClients />} />
+                <Route
+                  path="manage-clients/:id"
+                  element={<AdminManageClientsDeatails />}
+                />
+                <Route
+                  path="manage-clients/edit/:id"
+                  element={<AdminManageClientsEdit />}
+                />
+                <Route path="manage-books" element={<AdminManageBooks />} />
+                <Route
+                  path="manage-books/edit/:id"
+                  element={<AdminManageBooksEdit />}
+                />
+                <Route
+                  path="manage-books/:id"
+                  element={<AdminManageBooksDeatails />}
+                />
+                <Route
+                  path="manage-books/create"
+                  element={<AdminManageBooksCreate />}
+                />
+                <Route
+                  path="manage-categories"
+                  element={<AdminManageCategories />}
+                />
+                <Route
+                  path="manage-categories/create"
+                  element={<AdminManageCategoriesCreate />}
+                />
+              </Route>
 
               {/* Legal */}
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />

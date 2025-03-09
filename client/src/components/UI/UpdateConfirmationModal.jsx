@@ -1,9 +1,9 @@
 import React from "react";
 import { AlertTriangle, Loader } from "lucide-react";
 
-const DeleteConfirmationModal = ({
-  handleDelete,
-  setIsDeleteModalOpen,
+const UpdateConfirmationModal = ({
+  handleUpdate,
+  setIsUpdateModalOpen,
   loading,
   type,
 }) => {
@@ -14,22 +14,22 @@ const DeleteConfirmationModal = ({
           <div className="flex items-center justify-center mb-4">
             <AlertTriangle className="text-red-500 mr-2" size={24} />
             <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
-              Confirm Deletion
+              Confirm Update
             </h2>
           </div>
           <p className="text-center text-gray-600 dark:text-gray-300 mb-6">
-            Are you sure you want to delete this {type}? This action cannot be
+            Are you sure you want to update this {type}? This action cannot be
             undone.
           </p>
           <div className="flex space-x-4">
             <button
-              onClick={() => setIsDeleteModalOpen(false)}
+              onClick={() => setIsUpdateModalOpen(false)}
               className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
               Cancel
             </button>
             <button
-              onClick={handleDelete}
+              onClick={handleUpdate}
               disabled={loading}
               className="flex-1 bg-red-500 text-white py-2 rounded-lg hover:bg-red-600 transition-colors"
             >
@@ -38,7 +38,7 @@ const DeleteConfirmationModal = ({
                   <Loader className="h-5 w-5 text-blue-500 animate-spin" />
                 </div>
               ) : (
-                "Delete"
+                "Update"
               )}
             </button>
           </div>
@@ -48,4 +48,4 @@ const DeleteConfirmationModal = ({
   );
 };
 
-export default DeleteConfirmationModal;
+export default UpdateConfirmationModal;

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import UserSideBar from "../components/UI/UserSideBar";
 import CategorieCard from "../components/UI/CategorieCard.jsx";
 import axios from "axios";
@@ -6,13 +6,22 @@ import { Link } from "react-router-dom";
 
 import { Search, X, Plus, Grid, List } from "lucide-react";
 import { categoriesApiURL } from "../services/api.js";
+import { useSelector } from "react-redux";
 
 const AdminManageCategories = () => {
+  const { user } = useSelector((state) => state.user);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'row'
+
+  // Authentification Required as 'admin'
+  useMemo(() => {
+    if (!user || user.role !== "admin") {
+      window.location.href = "/";
+    }
+  }, [user]);
 
   // Fetch Categories
   const fetchCategories = async () => {

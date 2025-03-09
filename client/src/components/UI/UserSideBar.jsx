@@ -52,7 +52,7 @@ const UserSideBar = () => {
               <div className="absolute bottom-0 right-0 bg-green-400 w-6 h-6 rounded-full border-3 border-white shadow-md animate-pulse"></div>
             </div>
             <div className="text-center">
-              <h2 className="text-xl font-bold">{user?.nom}</h2>
+              <h2 className="text-xl font-bold uppercase">{user?.nom}</h2>
               <p className="text-sm opacity-80">{user?.role}</p>
             </div>
           </div>

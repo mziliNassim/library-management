@@ -6,7 +6,7 @@ const generateToken = (user) => {
   return jwt.sign(
     { id: user._id.toString(), role: user.role },
     "e89f4s8d4f98sd4f984sd984f984f449s8d4f984sdf984sd984f9s84d984f984sd84f98sd4f",
-    { expiresIn: "24h" }
+    { expiresIn: "62h" }
   );
 };
 

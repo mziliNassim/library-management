@@ -6,14 +6,10 @@ export const userSlice = createSlice({
   reducers: {
     setUser: (state, action) => {
       state.user = action.payload;
-
-      // save local storage
       localStorage.setItem("user", JSON.stringify(action.payload));
     },
     clearUser: (state) => {
       state.user = null;
-
-      // clear local storage
       localStorage.removeItem("user");
     },
   },

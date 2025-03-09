@@ -27,6 +27,11 @@ clientSchema.methods.validEmail = async function (email) {
   else throw new Error("Invalid email format!");
 };
 
+// Email exist
+clientSchema.statics.emailExists = async function (email) {
+  return await this.findOne({ email });
+};
+
 // Match passwords
 clientSchema.methods.matchPassword = async function (
   password,

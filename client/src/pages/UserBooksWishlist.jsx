@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import UserSideBar from "../components/UI/UserSideBar";
 import BookCard from "../components/UI/BookCard.jsx";
 import axios from "axios";
@@ -6,8 +6,11 @@ import { Link } from "react-router-dom";
 
 import { Search, Filter, X, Plus, Grid, List } from "lucide-react";
 import { categoriesApiURL, livresApiURL } from "../services/api.js";
+import { useSelector } from "react-redux";
 
 const UserBooksWishlist = () => {
+  const { user } = useSelector((state) => state.user);
+
   const [books, setBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -17,6 +20,13 @@ const UserBooksWishlist = () => {
   const [langueFilter, setLangueFilter] = useState("");
   const [disponibleFilter, setDisponibleFilter] = useState("");
   const [viewMode, setViewMode] = useState("grid"); // 'grid' or 'row'
+
+  // Authentification Required
+  useMemo(() => {
+    if (!user) {
+      window.location.href = "/";
+    }
+  }, [user]);
 
   // Fetch Books
   useEffect(() => {
