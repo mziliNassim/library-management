@@ -43,6 +43,22 @@ const getCategorieById = async (req, res) => {
 
 const addCategorie = async (req, res) => {
   try {
+    const { nom, description } = req.body;
+
+    if (!nom || !description)
+      return res.status(400).json({
+        success: false,
+        message: "Nom and description are required!",
+        data: null,
+      });
+
+    if (await Categorie.validName(nom))
+      return res.status(400).json({
+        success: false,
+        message: "Invalid category name! Already exists.",
+        data: null,
+      });
+
     const categorie = new Categorie(req.body);
     await categorie.save();
     return res.status(201).json({

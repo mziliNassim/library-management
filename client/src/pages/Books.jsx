@@ -85,6 +85,11 @@ const Books = () => {
     setFilteredBooks(filtered);
   };
 
+  // smoth scroll to top
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [currentPage]);
+
   return (
     <div className="container w-full sm:w-11/12 md:10/12 mx-auto px-4 py-8">
       {/* Header (search, veiwMode, search) */}
@@ -101,38 +106,25 @@ const Books = () => {
 
       {/* Books grid/list */}
       {loading ? (
-        <>
-          {/* Loading state */}
-          <div className="flex justify-center items-center h-64">
-            <Loader className="h-8 w-8 text-blue-500 animate-spin" />
+        <div className="flex justify-center items-center h-64">
+          <Loader className="h-8 w-8 text-blue-500 animate-spin" />
+        </div>
+      ) : error && !loading ? (
+        <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-4 rounded-lg mb-6">
+          <div className="flex items-center">
+            <AlertTriangle className="h-5 w-5 mr-2" />
+            <span>{error}</span>
           </div>
-        </>
+        </div>
+      ) : filteredBooks.length === 0 && !loading && !error ? (
+        <div className="flex flex-col items-center justify-center h-64">
+          <Layers className="h-8 w-8 text-gray-500" />
+          <span className="text-gray-500">No results found</span>
+        </div>
       ) : (
         <>
-          {/* Error state */}
-          {error && !loading ? (
-            <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-4 rounded-lg mb-6">
-              <div className="flex items-center">
-                <AlertTriangle className="h-5 w-5 mr-2" />
-                <span>{error}</span>
-              </div>
-            </div>
-          ) : (
-            <>
-              {/* No results */}
-              {filteredBooks.length === 0 && !loading && !error ? (
-                <div className="flex flex-col items-center justify-center h-64">
-                  <Layers className="h-8 w-8 text-gray-500" />
-                  <span className="text-gray-500">No results found</span>
-                </div>
-              ) : (
-                <>
-                  {/* Books grid */}
-                  <BooksList books={currentBooks} viewMode={viewMode} />
-                </>
-              )}
-            </>
-          )}
+          {/* Books grid */}
+          <BooksList books={currentBooks} viewMode={viewMode} />
         </>
       )}
 

@@ -8,6 +8,7 @@ import { Search, Filter, X, Plus, Grid, List, Loader } from "lucide-react";
 import { useSelector } from "react-redux";
 import { categoriesApiURL, livresApiURL } from "../services/api.js";
 import ManagementAlert from "../components/UI/ManagementAlert.jsx";
+import BooksPagination from "../components/UI/BooksPagination.jsx"; // Import the pagination component
 
 const AdminManageBooks = () => {
   const { user } = useSelector((state) => state.user);
@@ -21,6 +22,10 @@ const AdminManageBooks = () => {
   const [langueFilter, setLangueFilter] = useState("");
   const [disponibleFilter, setDisponibleFilter] = useState(""); // available, notAvailable
   const [viewMode, setViewMode] = useState("grid");
+
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [booksPerPage, setBooksPerPage] = useState(2);
 
   const languages = [...new Set(books.map((book) => book.langue))];
 
@@ -87,13 +92,29 @@ const AdminManageBooks = () => {
     );
   });
 
+  // Pagination Logic
+  const indexOfLastBook = currentPage * booksPerPage;
+  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
+
   // Reset Filters
   const resetFilters = () => {
     setSearchTerm("");
     setCategoryFilter("");
     setLangueFilter("");
     setDisponibleFilter("");
+    setCurrentPage(1); // Reset to the first page when filters are reset
   };
+
+  useEffect(() => {
+    if (!loading && filteredBooks.length === 0) {
+      if (alert.message !== "No books found!") {
+        setAlert({ message: "No books found!", success: false });
+      }
+    } else if (alert.message !== "") {
+      setAlert({ message: "", success: false });
+    }
+  }, [filteredBooks, loading, alert.message]);
 
   return (
     <>
@@ -154,7 +175,7 @@ const AdminManageBooks = () => {
                       placeholder="Search by title"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
                     />
                     <Search
                       className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
@@ -167,7 +188,7 @@ const AdminManageBooks = () => {
                     <select
                       value={categoryFilter}
                       onChange={(e) => setCategoryFilter(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">All Categories</option>
                       {categories.map((category) => (
@@ -187,7 +208,7 @@ const AdminManageBooks = () => {
                     <select
                       value={langueFilter}
                       onChange={(e) => setLangueFilter(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">All Languages</option>
                       {languages &&
@@ -208,7 +229,7 @@ const AdminManageBooks = () => {
                     <select
                       value={disponibleFilter}
                       onChange={(e) => setDisponibleFilter(e.target.value)}
-                      className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
+                      className="w-full pl-10 py-2 rounded-lg border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="">All</option>
                       <option value="available">Available</option>
@@ -244,30 +265,38 @@ const AdminManageBooks = () => {
                 ) : (
                   <>
                     {alert.message && (
-                      <ManagementAlert
-                        alert={alert}
-                        setAlert={setAlert}
-                        // close={updateUser?.nom ? true : false}
-                      />
+                      <ManagementAlert alert={alert} setAlert={setAlert} />
                     )}
 
                     {filteredBooks.length > 0 && (
-                      <div
-                        className={`${
-                          viewMode === "grid"
-                            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
-                            : "space-y-6"
-                        }`}
-                      >
-                        {filteredBooks.map((book) => (
-                          <BookCard
-                            key={book._id}
-                            book={book}
-                            setAlert={setAlert}
-                            fetchBooks={fetchBooks}
-                          />
-                        ))}
-                      </div>
+                      <>
+                        <div
+                          className={`${
+                            viewMode === "grid"
+                              ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
+                              : "space-y-6"
+                          }`}
+                        >
+                          {currentBooks.map((book) => (
+                            <BookCard
+                              key={book._id}
+                              book={book}
+                              setAlert={setAlert}
+                              fetchBooks={fetchBooks}
+                            />
+                          ))}
+                        </div>
+
+                        {/* Pagination */}
+                        <BooksPagination
+                          filteredBooks={filteredBooks}
+                          indexOfFirstBook={indexOfFirstBook}
+                          indexOfLastBook={indexOfLastBook}
+                          booksPerPage={booksPerPage}
+                          setCurrentPage={setCurrentPage}
+                          currentPage={currentPage}
+                        />
+                      </>
                     )}
                   </>
                 )}

@@ -7,7 +7,7 @@ import ManagementAlert from "../components/UI/ManagementAlert.jsx";
 
 import { clientsApiURL } from "../services/api";
 
-import { Users, Loader } from "lucide-react";
+import { Users, Loader, Linkedin, Globe, Github, FileText } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import UpdateConfirmationModal from "../components/UI/UpdateConfirmationModal.jsx";
 
@@ -19,6 +19,12 @@ const AdminManageClientsEdit = () => {
     adresse: "",
     role: "", // ["client", "admin"]
     id: "",
+    socials: {
+      linkedin: "",
+      website: "",
+      github: "",
+      bio: "",
+    },
   });
   const [alert, setAlert] = useState({ message: "", success: false });
   const [loading, setLoading] = useState(true);
@@ -41,7 +47,17 @@ const AdminManageClientsEdit = () => {
       const response = await axios.get(`${clientsApiURL}/${id}`, {
         headers: { Authorization: `Bearer ${user?.token}` },
       });
-      setUpdateUser(response.data?.data?.client);
+      // If socials doesn't exist in the response, add it
+      const clientData = response.data?.data?.client;
+      if (!clientData.socials) {
+        clientData.socials = {
+          linkedin: "",
+          website: "",
+          github: "",
+          bio: "",
+        };
+      }
+      setUpdateUser(clientData);
     } catch (error) {
       setAlert({
         message: "Client not found!",
@@ -51,6 +67,7 @@ const AdminManageClientsEdit = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchUser();
   }, [user, id]);
@@ -60,6 +77,17 @@ const AdminManageClientsEdit = () => {
     setUpdateUser({
       ...updateUser,
       [name]: value,
+    });
+  };
+
+  const handleSocialChange = (e) => {
+    const { name, value } = e.target;
+    setUpdateUser({
+      ...updateUser,
+      socials: {
+        ...updateUser.socials,
+        [name]: value,
+      },
     });
   };
 
@@ -205,12 +233,97 @@ const AdminManageClientsEdit = () => {
                               </div>
                             </div>
                           </div>
+
+                          {/* Social Media Section */}
+                          <div className="mt-8">
+                            <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-600 pb-2">
+                              Social Media & Profile
+                            </h3>
+
+                            <div className="space-y-4">
+                              <div className="group">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                  LinkedIn Profile
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Linkedin className="h-5 w-5 text-blue-600" />
+                                  </div>
+                                  <input
+                                    type="url"
+                                    name="linkedin"
+                                    value={updateUser.socials?.linkedin}
+                                    onChange={handleSocialChange}
+                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                    placeholder="https://linkedin.com/in/username"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="group">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                  Website
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Globe className="h-5 w-5 text-green-600" />
+                                  </div>
+                                  <input
+                                    type="url"
+                                    name="website"
+                                    value={updateUser.socials?.website}
+                                    onChange={handleSocialChange}
+                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                    placeholder="https://yourwebsite.com"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="group">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                  GitHub
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <Github className="h-5 w-5 text-gray-800 dark:text-gray-200" />
+                                  </div>
+                                  <input
+                                    type="url"
+                                    name="github"
+                                    value={updateUser.socials?.github}
+                                    onChange={handleSocialChange}
+                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                    placeholder="https://github.com/username"
+                                  />
+                                </div>
+                              </div>
+
+                              <div className="group">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                  Bio / Description
+                                </label>
+                                <div className="relative">
+                                  <div className="absolute top-3 left-3 flex items-start pointer-events-none">
+                                    <FileText className="h-5 w-5 text-purple-600" />
+                                  </div>
+                                  <textarea
+                                    name="bio"
+                                    value={updateUser.socials?.bio}
+                                    onChange={handleSocialChange}
+                                    rows="4"
+                                    className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+                                    placeholder="Write a short bio or description..."
+                                  ></textarea>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
                         </div>
 
                         <div className="flex justify-between pt-4">
                           <Link
                             to="/admin/manage-clients"
-                            className="px-6 py-3  bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 focus:bg-gray-300 dark:focus:bg-gray-700 focus:ring-gray-500 font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2  focus:ring-offset-2 transition-all duration-200 transform hover:-translate-y-1"
+                            className="px-6 py-3 bg-gray-200 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-300 dark:hover:bg-gray-700 focus:bg-gray-300 dark:focus:bg-gray-700 focus:ring-gray-500 font-medium rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 transform hover:-translate-y-1"
                           >
                             Back to Clients
                           </Link>
@@ -223,7 +336,7 @@ const AdminManageClientsEdit = () => {
                           >
                             {loadingSubmit ? (
                               <div className="flex justify-center items-center">
-                                <Loader className="h-5 w-5 text-blue-500 animate-spin" />
+                                <Loader className="h-5 w-5 text-white animate-spin" />
                               </div>
                             ) : (
                               "Update User"

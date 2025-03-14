@@ -122,7 +122,7 @@ const logout = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const updates = Object.keys(req.body);
-    const allowedUpdates = ["nom", "email", "adresse"];
+    const allowedUpdates = ["nom", "email", "adresse", "socials"];
     const isValidOperation = updates.every((update) =>
       allowedUpdates.includes(update)
     );

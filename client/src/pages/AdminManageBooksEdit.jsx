@@ -5,6 +5,7 @@ import axios from "axios";
 
 import { Plus, Loader, ArrowLeft, Save } from "lucide-react";
 import { livresApiURL, categoriesApiURL } from "../services/api.js";
+import { languages } from "../services/data";
 
 import UserSideBar from "../components/UI/UserSideBar";
 import ManagementAlert from "../components/UI/ManagementAlert.jsx";
@@ -12,7 +13,6 @@ import UpdateConfirmationModal from "../components/UI/UpdateConfirmationModal.js
 
 const AdminManageBooksEdit = () => {
   const { user } = useSelector((state) => state.user);
-  const navigate = useNavigate();
 
   const [bookData, setBookData] = useState({
     titre: "",
@@ -119,20 +119,6 @@ const AdminManageBooksEdit = () => {
     }
   };
 
-  // Languages options
-  const languages = [
-    "English",
-    "French",
-    "Spanish",
-    "German",
-    "Italian",
-    "Portuguese",
-    "Russian",
-    "Chinese",
-    "Japanese",
-    "Arabic",
-  ];
-
   return (
     <>
       {isUpdateModalOpen && (
@@ -192,248 +178,246 @@ const AdminManageBooksEdit = () => {
                       />
                     )}
 
-                    <form
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        setIsUpdateModalOpen(true);
-                      }}
-                    >
-                      <div className="bg-white dark:bg-gray-800 rounded-lg">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                          {/* Title */}
-                          <div className="col-span-2">
-                            <label
-                              htmlFor="titre"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Book Title *
-                            </label>
-                            <input
-                              type="text"
-                              id="titre"
-                              name="titre"
-                              value={bookData.titre || ""}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="Enter book title"
-                            />
-                          </div>
+                    {bookData.isbn && (
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          setIsUpdateModalOpen(true);
+                        }}
+                      >
+                        <div className="bg-white dark:bg-gray-800 rounded-lg">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Title */}
+                            <div className="col-span-2">
+                              <label
+                                htmlFor="titre"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Book Title *
+                              </label>
+                              <input
+                                type="text"
+                                id="titre"
+                                name="titre"
+                                value={bookData.titre || ""}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="Enter book title"
+                              />
+                            </div>
 
-                          {/* Author */}
-                          <div>
-                            <label
-                              htmlFor="auteur"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Author *
-                            </label>
-                            <input
-                              type="text"
-                              id="auteur"
-                              name="auteur"
-                              value={bookData.auteur || ""}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="Enter author name"
-                            />
-                          </div>
+                            {/* Author */}
+                            <div>
+                              <label
+                                htmlFor="auteur"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Author *
+                              </label>
+                              <input
+                                type="text"
+                                id="auteur"
+                                name="auteur"
+                                value={bookData.auteur || ""}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="Enter author name"
+                              />
+                            </div>
 
-                          {/* Publisher */}
-                          <div>
-                            <label
-                              htmlFor="editeur"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Publisher *
-                            </label>
-                            <input
-                              type="text"
-                              id="editeur"
-                              name="editeur"
-                              value={bookData.editeur || ""}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="Enter publisher name"
-                            />
-                          </div>
+                            {/* Publisher */}
+                            <div>
+                              <label
+                                htmlFor="editeur"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Publisher *
+                              </label>
+                              <input
+                                type="text"
+                                id="editeur"
+                                name="editeur"
+                                value={bookData.editeur || ""}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="Enter publisher name"
+                              />
+                            </div>
 
-                          {/* ISBN */}
-                          <div>
-                            <label
-                              htmlFor="isbn"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              ISBN *
-                            </label>
-                            <input
-                              type="text"
-                              id="isbn"
-                              name="isbn"
-                              value={bookData.isbn || ""}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="e.g. 978-0-14-118523-1"
-                            />
-                          </div>
+                            {/* ISBN */}
+                            <div>
+                              <label
+                                htmlFor="isbn"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                ISBN *
+                              </label>
+                              <input
+                                type="text"
+                                id="isbn"
+                                name="isbn"
+                                value={bookData.isbn || ""}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="e.g. 978-0-14-118523-1"
+                              />
+                            </div>
 
-                          {/* Publication Year */}
-                          <div>
-                            <label
-                              htmlFor="anneePublication"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Publication Year *
-                            </label>
-                            <input
-                              type="number"
-                              id="anneePublication"
-                              name="anneePublication"
-                              value={bookData.anneePublication || ""}
-                              onChange={handleChange}
-                              required
-                              min="1000"
-                              max={new Date().getFullYear()}
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="e.g. 2020"
-                            />
-                          </div>
+                            {/* Publication Year */}
+                            <div>
+                              <label
+                                htmlFor="anneePublication"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Publication Year *
+                              </label>
+                              <input
+                                type="number"
+                                id="anneePublication"
+                                name="anneePublication"
+                                value={bookData.anneePublication || ""}
+                                onChange={handleChange}
+                                required
+                                min="1000"
+                                max={new Date().getFullYear()}
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="e.g. 2020"
+                              />
+                            </div>
 
-                          {/* Quantity */}
-                          <div>
-                            <label
-                              htmlFor="quantite"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Quantity *
-                            </label>
-                            <input
-                              type="number"
-                              id="quantite"
-                              name="quantite"
-                              value={bookData.quantite || 0}
-                              onChange={handleChange}
-                              required
-                              min="0"
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="Enter quantity available"
-                            />
-                          </div>
+                            {/* Quantity */}
+                            <div>
+                              <label
+                                htmlFor="quantite"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Quantity *
+                              </label>
+                              <input
+                                type="number"
+                                id="quantite"
+                                name="quantite"
+                                value={bookData.quantite || 0}
+                                onChange={handleChange}
+                                required
+                                min="0"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="Enter quantity available"
+                              />
+                            </div>
 
-                          {/* Category */}
-                          <div>
-                            <label
-                              htmlFor="categorie"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Category *
-                            </label>
-                            <select
-                              id="categorie"
-                              name="categorie"
-                              value={bookData.categorie || ""}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            >
-                              <option value="">Select a category</option>
-                              {categories && categories.length > 0 ? (
-                                categories.map((cat) => (
-                                  <option key={cat._id} value={cat.nom}>
-                                    {cat.nom}
+                            {/* Category */}
+                            <div>
+                              <label
+                                htmlFor="categorie"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Category *
+                              </label>
+                              <select
+                                id="categorie"
+                                name="categorie"
+                                value={bookData.categorie || ""}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                              >
+                                <option value="">Select a category</option>
+                                {categories && categories.length > 0 ? (
+                                  categories.map((cat) => (
+                                    <option key={cat._id} value={cat.nom}>
+                                      {cat.nom}
+                                    </option>
+                                  ))
+                                ) : (
+                                  <>
+                                    <option value="Fiction">Fiction</option>
+                                    <option value="Non-Fiction">
+                                      Non-Fiction
+                                    </option>
+                                    <option value="Fantasy">Fantasy</option>
+                                    <option value="Science Fiction">
+                                      Science Fiction
+                                    </option>
+                                    <option value="Mystery">Mystery</option>
+                                    <option value="Romance">Romance</option>
+                                    <option value="Biography">Biography</option>
+                                  </>
+                                )}
+                              </select>
+                            </div>
+
+                            {/* Language */}
+                            <div>
+                              <label
+                                htmlFor="langue"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Language *
+                              </label>
+                              <select
+                                id="langue"
+                                name="langue"
+                                value={bookData.langue || ""}
+                                onChange={handleChange}
+                                required
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                              >
+                                <option value="">Select a language</option>
+                                {languages.map((lang) => (
+                                  <option key={lang} value={lang}>
+                                    {lang}
                                   </option>
-                                ))
+                                ))}
+                              </select>
+                            </div>
+
+                            {/* Description */}
+                            <div className="col-span-2">
+                              <label
+                                htmlFor="description"
+                                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
+                              >
+                                Description
+                              </label>
+                              <textarea
+                                id="description"
+                                name="description"
+                                value={bookData.description || ""}
+                                onChange={handleChange}
+                                rows="4"
+                                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                                placeholder="Enter book description"
+                              ></textarea>
+                            </div>
+                          </div>
+
+                          {/* Submit Button */}
+                          <div className="mt-8 flex justify-end">
+                            <button
+                              type="submit"
+                              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center justify-center transition-colors duration-200"
+                              disabled={loadingUpdate}
+                            >
+                              {loadingUpdate ? (
+                                <>
+                                  <Loader size={20} className="animate-spin" />
+                                </>
                               ) : (
                                 <>
-                                  <option value="Fiction">Fiction</option>
-                                  <option value="Non-Fiction">
-                                    Non-Fiction
-                                  </option>
-                                  <option value="Fantasy">Fantasy</option>
-                                  <option value="Science Fiction">
-                                    Science Fiction
-                                  </option>
-                                  <option value="Mystery">Mystery</option>
-                                  <option value="Romance">Romance</option>
-                                  <option value="Biography">Biography</option>
+                                  <Save size={20} className="mr-2" />
+                                  Update Book
                                 </>
                               )}
-                            </select>
-                          </div>
-
-                          {/* Language */}
-                          <div>
-                            <label
-                              htmlFor="langue"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Language *
-                            </label>
-                            <select
-                              id="langue"
-                              name="langue"
-                              value={bookData.langue || ""}
-                              onChange={handleChange}
-                              required
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                            >
-                              <option value="">Select a language</option>
-                              {languages.map((lang) => (
-                                <option key={lang} value={lang}>
-                                  {lang}
-                                </option>
-                              ))}
-                            </select>
-                          </div>
-
-                          {/* Description */}
-                          <div className="col-span-2">
-                            <label
-                              htmlFor="description"
-                              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-                            >
-                              Description
-                            </label>
-                            <textarea
-                              id="description"
-                              name="description"
-                              value={bookData.description || ""}
-                              onChange={handleChange}
-                              rows="4"
-                              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
-                              placeholder="Enter book description"
-                            ></textarea>
+                            </button>
                           </div>
                         </div>
-
-                        {/* Submit Button */}
-                        <div className="mt-8 flex justify-end">
-                          <button
-                            type="submit"
-                            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg flex items-center justify-center transition-colors duration-200"
-                            disabled={loadingUpdate}
-                          >
-                            {loadingUpdate ? (
-                              <>
-                                <Loader
-                                  size={20}
-                                  className="mr-2 animate-spin"
-                                />
-                                Updating...
-                              </>
-                            ) : (
-                              <>
-                                <Save size={20} className="mr-2" />
-                                Update Book
-                              </>
-                            )}
-                          </button>
-                        </div>
-                      </div>
-                    </form>
+                      </form>
+                    )}
                   </>
                 )}
               </div>

@@ -5,9 +5,15 @@ const clientSchema = new mongoose.Schema({
   nom: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  adresse: { type: String, required: false },
+  adresse: { type: String, required: false, default: "" },
   active: { type: Boolean, default: true },
   role: { type: String, default: "client", enum: ["client", "admin"] },
+  socials: {
+    linkedin: { type: String, required: false, default: "" },
+    website: { type: String, required: false, default: "" },
+    github: { type: String, required: false, default: "" },
+    bio: { type: String, required: false, default: "" },
+  },
 });
 
 // Name validation
