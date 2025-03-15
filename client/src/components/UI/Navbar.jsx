@@ -14,11 +14,19 @@ import {
   FaShoppingCart,
 } from "react-icons/fa";
 import { clearUser } from "../../features/UserSlice";
-import { clientsApiURL } from "../../services/api";
+import { clientsApiURL, livresApiURL } from "../../services/api";
 import { Loader } from "lucide-react";
+import axios from "axios";
 
 const Navbar = () => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [books, setBooks] = useState([]);
+  const [loadingBooks, setLoadingBooks] = useState(true);
+  const [alert, setAlert] = useState({ message: "", success: false });
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filteredBooks, setFilteredBooks] = useState([]);
+  const [isSearchFocused, setIsSearchFocused] = useState(false);
+
   const [dropdown, setDropdown] = useState(false);
   const [logoutLoding, setLogoutLoading] = useState(false);
   const { theme } = useSelector((state) => state.theme);
@@ -27,6 +35,25 @@ const Navbar = () => {
 
   // Ref for the dropdown
   const dropdownRef = useRef(null);
+
+  // Fetch books
+  useEffect(() => {
+    const fetchBooks = async () => {
+      setLoadingBooks(true);
+      try {
+        const response = await axios.get(`${livresApiURL}`);
+        setBooks(response.data?.data?.livres);
+      } catch (error) {
+        setAlert({
+          message: error.response?.data?.message || "...",
+          success: false,
+        });
+      } finally {
+        setLoadingBooks(false);
+      }
+    };
+    fetchBooks();
+  }, [user]);
 
   // Handle clicks outside the dropdown
   useEffect(() => {
@@ -67,6 +94,20 @@ const Navbar = () => {
       setDropdown(false);
     }
   };
+
+  // Handle search input change
+  useEffect(() => {
+    if (searchQuery) {
+      const filtered = books.filter(
+        (book) =>
+          book.titre.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          book.auteur.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredBooks(filtered.slice(0, 4));
+    } else {
+      setFilteredBooks([]);
+    }
+  }, [searchQuery, books]);
 
   return (
     <nav
@@ -125,9 +166,31 @@ const Navbar = () => {
           <div className="hidden lg:block relative mr-3">
             <input
               type="text"
-              placeholder="Search books..."
+              placeholder="Search books by name or author..."
               className="rounded-full py-1 px-4 focus:outline-none focus:ring-2 w-48 lg:w-64 bg-[#7549a6] dark:bg-[#8961b3] text-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             />
+
+            {isSearchFocused && filteredBooks.length > 0 && (
+              <div className="absolute md:right-0 z-50 mt-2 w-80 bg-white dark:bg-gray-700 rounded-md shadow-lg">
+                {filteredBooks.map((book) => (
+                  <Link
+                    key={book._id}
+                    to={`/discover/books/${book._id}`}
+                    className="block px-4 py-2 text-sm text-gray-700 rounded-md hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    <div className="font-bold">{book.titre}</div>
+                    <div className="text-xs text-gray-500">{book.auteur}</div>
+                    <div className="text-xs text-gray-500">
+                      {book.categorie} - {book.anneePublication}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Theme toggle */}
@@ -146,39 +209,6 @@ const Navbar = () => {
           {/* Right side icons */}
           {user ? (
             <div className="flex items-center">
-              {/* Notifications */}
-              <button
-                type="button"
-                className="relative rounded-full p-1 mx-1 lg:mx-2 text-white"
-              >
-                <span className="sr-only">View notifications</span>
-                <FaBell className="h-5 w-5" aria-hidden="true" />
-                <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-red-500"></span>
-              </button>
-
-              {/* Cart button */}
-              <Link
-                to="/cart"
-                className="hidden sm:flex text-white py-1 px-3 rounded-md mx-1 lg:mx-2 text-sm font-medium transition-colors duration-200 items-center dark:bg-[#7549a6] bg-[#7549a6] dark:hover:bg-[#8a63b8] hover:bg-[#8a63b8]"
-              >
-                <FaShoppingCart className="mr-1" />
-                <span className="hidden sm:inline">Cart </span>
-                <span className="ml-1 px-1.5 py-0.5 rounded-full text-xs bg-[#8961b3] dark:bg-[#8961b3]">
-                  3
-                </span>
-              </Link>
-
-              {/* Mobile cart icon */}
-              <button
-                // onClick={() => handleNavigation("/cart")}
-                className="sm:hidden relative rounded-full p-1 mx-1 text-white"
-              >
-                <FaShoppingCart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 bg-red-500 rounded-full w-4 h-4 flex items-center justify-center text-xs text-white">
-                  3
-                </span>
-              </button>
-
               {/* Profile icon */}
               <div
                 className="relative ml-1 lg:ml-2 text-white"
@@ -191,11 +221,6 @@ const Navbar = () => {
                   onClick={() => setDropdown(!dropdown)}
                   aria-hidden="true"
                 />
-                {/* <button
-                >
-                  <span className="sr-only">Open user menu</span>
-                  <FaUserCircle className="h-6 w-6" />
-                </button> */}
 
                 <div
                   className={`absolute z-50 flex-col right-0 px-3 py-1 mt-2 gap-1 w-64 bg-white dark:bg-gray-700 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 ${
@@ -263,9 +288,9 @@ const Navbar = () => {
           ) : (
             <Link
               to="/auth/signin"
-              className="hidden sm:flex text-white py-1 px-3 rounded-md mx-1 lg:mx-2 text-sm font-medium transition-colors duration-200 items-center dark:bg-[#7549a6] bg-[#7549a6] dark:hover:bg-[#8a63b8] hover:bg-[#8a63b8]"
+              className="flex text-white py-1 px-3 rounded-md mx-1 lg:mx-2 text-sm font-medium transition-colors duration-200 items-center dark:bg-[#7549a6] bg-[#7549a6] dark:hover:bg-[#8a63b8] hover:bg-[#8a63b8]"
             >
-              <span className="hidden sm:inline">Sign In</span>
+              <span className="inline">Sign In</span>
             </Link>
           )}
         </div>
@@ -293,7 +318,28 @@ const Navbar = () => {
               type="text"
               placeholder="Search books..."
               className="w-full rounded-full py-2 px-4 focus:outline-none focus:ring-2  bg-[#7549a6] dark:bg-[#8961b3] text-white"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => setIsSearchFocused(true)}
+              onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
             />
+            {isSearchFocused && filteredBooks.length > 0 && (
+              <div className="mt-2 w-full bg-white dark:bg-gray-700 rounded-md shadow-lg">
+                {filteredBooks.map((book) => (
+                  <Link
+                    key={book._id}
+                    to={`/discover/books/${book._id}`}
+                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  >
+                    <div className="font-bold">{book.titre}</div>
+                    <div className="text-xs text-gray-500">{book.auteur}</div>
+                    <div className="text-xs text-gray-500">
+                      {book.categorie} - {book.anneePublication}
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

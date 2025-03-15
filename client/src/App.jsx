@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 
-import { setUser } from "./features/UserSlice.jsx";
+import { clearUser, setUser } from "./features/UserSlice.jsx";
 import { setTheme } from "./features/themeSlice.jsx";
 
 import Navbar from "./components/UI/Navbar.jsx";
@@ -13,9 +13,11 @@ import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
 
 import Home from "./pages/Home.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
+import NotFound from "./pages/NotFound.jsx";
+
 import Books from "./pages/Books.jsx";
 import BooksDetails from "./pages/BooksDetails.jsx";
-import NotFound from "./pages/NotFound.jsx";
 
 import TermsOfService from "./pages/TermsOfService";
 import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
@@ -35,6 +37,8 @@ import AdminManageBooksCreate from "./pages/AdminManageBooksCreate.jsx";
 
 import AdminManageCategories from "./pages/AdminManageCategories.jsx";
 import AdminManageCategoriesCreate from "./pages/AdminManageCategoriesCreate.jsx";
+import axios from "axios";
+import { clientsApiURL } from "./services/api.js";
 
 const App = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -42,18 +46,33 @@ const App = () => {
   const [loading, setLoading] = useState(true);
   const location = useLocation();
 
-  // check local storage
+  // check local storage (user && theme)
   useEffect(() => {
-    const checkLocalStorage = () => {
+    const checkLocalStorage = async () => {
       setLoading(true);
       // check local storage for user
       const user = localStorage.getItem("user");
-      if (user) dispatch(setUser(JSON.parse(user)));
+      if (user) {
+        // Valid Token
+        const parsedUser = JSON.parse(user);
+        const token = parsedUser?.token;
+
+        try {
+          await axios.get(`${clientsApiURL}/validToken/${token}`);
+
+          // set user data in global data (redux)
+          dispatch(setUser(parsedUser));
+        } catch (error) {
+          // Clear local storage
+          dispatch(clearUser());
+        }
+      }
 
       // check local storage for theme
       const theme = localStorage.getItem("theme");
       if (theme) dispatch(setTheme(theme));
       else dispatch(setTheme("light"));
+
       setLoading(false);
     };
     checkLocalStorage();
@@ -74,6 +93,7 @@ const App = () => {
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/LibriTech/contact" element={<ContactUs />} />
 
               {/* Authentification */}
               <Route path="/auth">

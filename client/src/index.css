@@ -18,22 +18,6 @@
   }
 }
 
-.dark-mode {
-  --bg-color: var(--clr-surface-a0);
-  --text-color: var(--clr-light-a0);
-  --primary-color: var(--clr-primary-a30);
-  --section-bg: var(--clr-surface-a10);
-  --card-bg: var(--clr-surface-a20);
-}
-
-.light-mode {
-  --bg-color: var(--clr-light-a0);
-  --text-color: var(--clr-dark-a0);
-  --primary-color: var(--clr-primary-a30);
-  --section-bg: var(--clr-primary-a10);
-  --card-bg: white;
-}
-
 /* Smooth scrool bar */
 ::-webkit-scrollbar {
   width: 10px;

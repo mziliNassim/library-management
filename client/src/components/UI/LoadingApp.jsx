@@ -1,14 +1,26 @@
 import React from "react";
+import Lottie from "react-lottie";
+import animationData from "../../animation/loader.json"; // Adjust the path to your Lottie JSON file
 
-const LoadingApp = () => {
+const Loader = () => {
+  const defaultOptions = {
+    loop: true,
+    autoplay: true,
+    animationData: animationData, // Your Lottie animation JSON
+    rendererSettings: {
+      preserveAspectRatio: "xMidYMid slice",
+    },
+  };
+
   return (
     <div className="flex items-center justify-center h-screen">
-      <div className="relative">
-        <div className="h-24 w-24 rounded-full border-t-8 border-b-8 border-gray-200"></div>
-        <div className="absolute top-0 left-0 h-24 w-24 rounded-full border-t-8 border-b-8 border-blue-500 animate-spin"></div>
-      </div>
+      <Lottie
+        options={defaultOptions}
+        height={200} // Adjust the height as needed
+        width={200} // Adjust the width as needed
+      />
     </div>
   );
 };
 
-export default LoadingApp;
+export default Loader;

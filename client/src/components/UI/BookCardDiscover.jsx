@@ -10,7 +10,7 @@ import {
   Tag,
 } from "lucide-react";
 
-const BookCardDiscover = ({ book, viewMode }) => {
+const BookCardDiscover = ({ book, viewMode = "grid" }) => {
   // Get a color based on the first letter of the book title
   const getColorClass = (letter) => {
     const colors = [

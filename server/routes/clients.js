@@ -1,7 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const { authenticate, authorize } = require("../middlewares/auth");
+const {
+  authenticate,
+  authorize,
+  tokenAuthorize,
+} = require("../middlewares/auth");
 
 const {
   register,
@@ -16,6 +20,12 @@ const {
   updateClient,
   deleteClient,
 } = require("../controllers/clients.controller");
+
+// ! ========== Token Validation ==========
+// @desc
+// @route   get /api/clients/validToken
+// @access  Public
+router.get("/validToken/:token", tokenAuthorize);
 
 // ! ========== Authentification ==========
 
