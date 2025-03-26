@@ -6,7 +6,7 @@ const generateToken = (user) => {
   return jwt.sign(
     { id: user._id.toString(), role: user.role },
     process.env.JWT_SECRET,
-    { expiresIn: "48h" }
+    { expiresIn: "24h" }
   );
 };
 
@@ -55,18 +55,16 @@ const authorize = (roles = []) => {
 const tokenAuthorize = (req, res) => {
   const token = req.params.token;
 
-  if (!token) {
+  if (!token)
     return res
       .status(401)
       .json({ success: false, message: "No token provided", data: null });
-  }
 
   jwt.verify(token, process.env.JWT_SECRET, (err) => {
-    if (err) {
+    if (err)
       return res
         .status(401)
         .json({ success: false, message: "Invalid token !", data: null });
-    }
 
     return res
       .status(200)

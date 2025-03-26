@@ -83,6 +83,11 @@ router.get("/", async (req, res) => {
           access: "Public",
           url: "/api/livres/:id",
         },
+        getLivreSouhaits: {
+          method: "GET",
+          access: "Client",
+          url: "/api/livres/wishlist",
+        },
         addLivre: {
           method: "POST",
           access: "Admin",

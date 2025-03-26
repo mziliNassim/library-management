@@ -44,6 +44,35 @@ const getLiverById = async (req, res) => {
   }
 };
 
+const getLivreSouhaits = async (req, res) => {
+  try {
+    const client = req.client;
+    const wishlistIds = client.wishlist || [];
+
+    const wishlist = await Livre.find({ _id: { $in: wishlistIds } });
+
+    if (wishlist.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No books in wishlist found!",
+        data: { Books: [] },
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Wishlist books found successfully!",
+      data: { Books: wishlist },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+      data: null,
+    });
+  }
+};
+
 const addLivre = async (req, res) => {
   try {
     const livre = new Livre(req.body);
@@ -109,6 +138,7 @@ const deleteLivre = async (req, res) => {
 module.exports = {
   addLivre,
   getAllLivers,
+  getLivreSouhaits,
   getLiverById,
   updateLivre,
   deleteLivre,

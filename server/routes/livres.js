@@ -4,9 +4,10 @@ const router = Router();
 const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
-  addLivre,
   getAllLivers,
   getLiverById,
+  getLivreSouhaits,
+  addLivre,
   updateLivre,
   deleteLivre,
 } = require("../controllers/livres.controller");
@@ -15,6 +16,11 @@ const {
 // @route   GET /api/livres/
 // @access  Public
 router.get("/", getAllLivers);
+
+// @desc    Get a bookw wishlist
+// @route   GET /api/livres/wishlist
+// @access  Client
+router.get("/wishlist", authenticate, getLivreSouhaits);
 
 // @desc    Get a book by ID
 // @route   GET /api/livres/:id
