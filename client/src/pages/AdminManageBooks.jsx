@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import UserSideBar from "../components/UI/UserSideBar";
-import BookCard from "../components/UI/BookCard.jsx";
+import BookCard from "../components/UI/BookCardDiscover.jsx";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
@@ -277,13 +277,15 @@ const AdminManageBooks = () => {
                               : "space-y-6"
                           }`}
                         >
-                          {currentBooks.map((book) => (
-                            <BookCard
-                              key={book._id}
-                              book={book}
-                              setAlert={setAlert}
-                              fetchBooks={fetchBooks}
-                            />
+                          {filteredBooks.map((book) => (
+                            <div key={book._id} className="relative group">
+                              <BookCard
+                                book={book}
+                                setAlert={setAlert}
+                                fetchBooks={fetchBooks}
+                                viewMode={viewMode}
+                              />
+                            </div>
                           ))}
                         </div>
 

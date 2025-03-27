@@ -58,10 +58,20 @@ const App = () => {
         const token = parsedUser?.token;
 
         try {
-          await axios.get(`${clientsApiURL}/validToken/${token}`);
+          const response = await axios.get(
+            `${clientsApiURL}/validToken/${token}`
+          );
 
-          // set user data in global data (redux)
-          dispatch(setUser(parsedUser));
+          if (response.data?.success) {
+            const response = await axios.get(`${clientsApiURL}/me`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            });
+            // set user data in global data (redux)
+            dispatch(setUser({ ...response.data.data.client, token }));
+          } else dispatch(clearUser());
         } catch (error) {
           // Clear local storage
           dispatch(clearUser());

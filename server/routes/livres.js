@@ -6,10 +6,12 @@ const { authenticate, authorize } = require("../middlewares/auth");
 const {
   getAllLivers,
   getLiverById,
-  getLivreSouhaits,
+  getLivresSouhaits,
+  addLivreSouhaits,
   addLivre,
   updateLivre,
   deleteLivre,
+  removeLivreSouhaits,
 } = require("../controllers/livres.controller");
 
 // @desc    Get all books
@@ -17,10 +19,20 @@ const {
 // @access  Public
 router.get("/", getAllLivers);
 
-// @desc    Get a bookw wishlist
+// @desc    Get a books wishlist
 // @route   GET /api/livres/wishlist
 // @access  Client
-router.get("/wishlist", authenticate, getLivreSouhaits);
+router.get("/wishlist", authenticate, getLivresSouhaits);
+
+// @desc    Add a book to client's wishlist
+// @route   POST /api/livres/wishlist/:id
+// @access  Client
+router.post("/wishlist/:id", authenticate, addLivreSouhaits);
+
+// @desc    Remove a book from client's wishlist
+// @route   DELETE /api/livres/wishlist/:id
+// @access  Client
+router.delete("/wishlist/:id", authenticate, removeLivreSouhaits);
 
 // @desc    Get a book by ID
 // @route   GET /api/livres/:id

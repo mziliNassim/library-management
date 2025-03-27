@@ -19,11 +19,14 @@ import {
   FileText,
   Tag,
   Loader,
+  BookMarked,
+  Heart,
 } from "lucide-react";
 
-const BookCard = ({ book, viewMode, setAlert, fetchBooks }) => {
+const BookCard = ({ book, viewMode, setAlert, fetchBooks, isAdmin = true }) => {
   const { user } = useSelector((state) => state.user);
 
+  const [actionsHoverd, setActionsHoverd] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [loadingDelete, setLoadingDelete] = useState(false);
 
@@ -78,8 +81,6 @@ const BookCard = ({ book, viewMode, setAlert, fetchBooks }) => {
     }
   };
 
-  const handleAlert = () => window.alert(`This feature is not implemented yet`);
-
   return (
     <>
       {isDeleteModalOpen && (
@@ -99,6 +100,52 @@ const BookCard = ({ book, viewMode, setAlert, fetchBooks }) => {
             : "flex flex-col h-full"
         }`}
       >
+        {/* Overlay actions */}
+        {actionsHoverd && (
+          <div className="absolute z-30 top-2 right-2 flex space-x-2 opacity-100 group-hover:opacity-100 transition-opacity">
+            <Link
+              to={`/discover/books/${book._id}`}
+              className="p-2 bg-indigo-500 text-white rounded-full shadow-lg hover:bg-indigo-600"
+              title="View details"
+            >
+              <Eye size={16} />
+            </Link>
+
+            {book.quantite > 0 ? (
+              <button
+                onClick={() => handleBorrowClick(book)}
+                className="p-2 bg-emerald-500 text-white rounded-full shadow-lg hover:bg-emerald-600"
+                title="Borrow book"
+              >
+                <BookMarked size={16} />
+              </button>
+            ) : (
+              <div
+                className="p-2 bg-amber-500 text-white rounded-full shadow-lg hover:bg-amber-600"
+                title="Not available"
+              >
+                Not available
+              </div>
+            )}
+
+            {user ? (
+              <button
+                className="p-2 bg-red-500 text-white rounded-full shadow-lg hover:bg-red-600"
+                title="View details"
+              >
+                <Heart size={16} />
+              </button>
+            ) : (
+              <button
+                className="p-2 bg-gray-500 text-white rounded-full shadow-lg hover:bg-gray-600"
+                title="View details"
+              >
+                <Heart size={16} />
+              </button>
+            )}
+          </div>
+        )}
+
         {/* Book cover/spine */}
         <div
           className={`relative bg-gradient-to-br ${getColorClass(book.titre[0])}
@@ -184,62 +231,64 @@ const BookCard = ({ book, viewMode, setAlert, fetchBooks }) => {
             </div>
           </div>
 
-          {/* Action buttons with tooltip-style labels */}
-          <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
-            <div className="flex space-x-2">
-              {/* View details */}
-              <Link
-                to={`/admin/manage-books/${book._id}`}
-                className="group relative p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-colors"
-              >
-                <Eye size={16} />
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  View details
-                </span>
-              </Link>
+          {/* Action buttons  */}
+          {isAdmin && (
+            <div className="flex justify-between items-center mt-auto pt-3 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex space-x-2">
+                {/* View details */}
+                <Link
+                  to={`/admin/manage-books/${book._id}`}
+                  className="group relative p-2 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400 rounded-lg hover:bg-indigo-200 dark:hover:bg-indigo-800/50 transition-colors"
+                >
+                  <Eye size={16} />
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    View details
+                  </span>
+                </Link>
 
-              {/* Edit book */}
-              <Link
-                to={`/admin/manage-books/edit/${book._id}`}
-                className="group relative p-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800/50 transition-colors"
-              >
-                <Edit size={16} />
-                <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                  Edit book
-                </span>
-              </Link>
+                {/* Edit book */}
+                <Link
+                  to={`/admin/manage-books/edit/${book._id}`}
+                  className="group relative p-2 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 rounded-lg hover:bg-emerald-200 dark:hover:bg-emerald-800/50 transition-colors"
+                >
+                  <Edit size={16} />
+                  <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                    Edit book
+                  </span>
+                </Link>
 
-              {/* Delete */}
-              <button
-                disabled={loadingDelete}
-                onClick={() => setIsDeleteModalOpen(true)}
-                className="group relative p-2 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 rounded-lg hover:bg-rose-200 dark:hover:bg-rose-800/50 transition-colors"
-              >
-                {loadingDelete ? (
-                  <div className="flex justify-center items-center">
-                    <Loader className="h-5 w-5 text-blue-500 animate-spin" />
-                  </div>
-                ) : (
-                  <>
-                    <Trash size={16} />
+                {/* Delete */}
+                <button
+                  disabled={loadingDelete}
+                  onClick={() => setIsDeleteModalOpen(true)}
+                  className="group relative p-2 bg-rose-100 dark:bg-rose-900/30 text-rose-700 dark:text-rose-400 rounded-lg hover:bg-rose-200 dark:hover:bg-rose-800/50 transition-colors"
+                >
+                  {loadingDelete ? (
+                    <div className="flex justify-center items-center">
+                      <Loader className="h-5 w-5 text-blue-500 animate-spin" />
+                    </div>
+                  ) : (
+                    <>
+                      <Trash size={16} />
 
-                    <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-                      Delete
-                    </span>
-                  </>
-                )}
-              </button>
-            </div>
-
-            {viewMode === "grid" && (
-              <div
-                className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[120px]"
-                title={book.isbn}
-              >
-                ISBN: {book.isbn}
+                      <span className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+                        Delete
+                      </span>
+                    </>
+                  )}
+                </button>
               </div>
-            )}
-          </div>
+
+              {viewMode === "grid" && (
+                <div
+                  className="text-xs text-gray-500 dark:text-gray-400 truncate max-w-[120px]"
+                  title={book.isbn}
+                >
+                  ISBN: {book.isbn}
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

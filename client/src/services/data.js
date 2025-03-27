@@ -2,7 +2,7 @@ import { User, BookOpen, Heart, Users, Book, List } from "lucide-react";
 
 export const navigation = [
   { name: "Books", path: "/discover/books", current: false },
-  { name: "Bestsellers", path: "/bestsellers", current: false },
+  // { name: "Bestsellers", path: "/bestsellers", current: false },
   { name: "Contact", path: "/LibriTech/contact", current: false },
 ];
 

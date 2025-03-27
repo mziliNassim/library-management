@@ -8,6 +8,7 @@ const clientSchema = new mongoose.Schema({
   adresse: { type: String, required: false, default: "" },
   active: { type: Boolean, default: true },
   role: { type: String, default: "client", enum: ["client", "admin"] },
+  wishlist: { type: Array, default: [] },
   socials: {
     linkedin: { type: String, required: false, default: "" },
     website: { type: String, required: false, default: "" },

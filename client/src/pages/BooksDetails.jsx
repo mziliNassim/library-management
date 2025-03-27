@@ -65,7 +65,7 @@ const BooksDetails = () => {
 
           {book ? (
             <>
-              <BooksDetailsTop book={book} />
+              <BooksDetailsTop book={book} setAlert={setAlert} />
 
               {similarBooks.length > 0 && (
                 <SimilarBooksSection books={similarBooks} />

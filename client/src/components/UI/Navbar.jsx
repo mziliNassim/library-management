@@ -137,13 +137,7 @@ const Navbar = () => {
               to="/"
               className="flex items-center text-white font-bold text-xl focus:outline-none"
             >
-              <img
-                alt="Bookio"
-                src="/darklogo.png"
-                width="170"
-                height="170"
-                className="mr-2"
-              />
+              <img alt="Bookio" src="/logo_biblio.png" width="80" height="80" />
             </Link>
           </div>
 

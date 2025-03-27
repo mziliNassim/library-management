@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Book,
   BookOpen,
@@ -9,9 +10,19 @@ import {
   User,
   Star,
   Bookmark,
+  BookmarkX,
+  Loader,
 } from "lucide-react";
+import axios from "axios";
+import { livresApiURL } from "../../services/api";
+import { setUser } from "../../features/UserSlice";
 
-const BooksDetailsTop = ({ book }) => {
+const BooksDetailsTop = ({ book, setAlert }) => {
+  const { user } = useSelector((state) => state.user);
+  const dispatch = useDispatch();
+
+  const [loadingWishlistAction, setLoadingWishlistAction] = useState(false);
+
   const metadata = [
     { icon: <User size={18} />, label: "Author", value: book?.auteur },
     { icon: <Printer size={18} />, label: "Publisher", value: book?.editeur },
@@ -25,18 +36,66 @@ const BooksDetailsTop = ({ book }) => {
     { icon: <Clock size={18} />, label: "Category", value: book?.categorie },
   ];
 
-  // Loan book functionality
-  const handleLoanBook = () => {
-    window.alert(
-      `Loaning book : ${book?.titre} \n \n \n This functionality is on development mode`
-    );
+  //
+  const addToWishlist = async () => {
+    setLoadingWishlistAction(true);
+    if (!user) navigate("/auth/signin");
+    try {
+      const response = await axios.post(
+        `${livresApiURL}/wishlist/${book._id}`,
+        {}, // Empty body if no data to send
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (response.data?.success) {
+        setAlert(response.data?.message);
+        dispatch(setUser({ ...user, wishlist: [...user.wishlist, book._id] }));
+      }
+    } catch (error) {
+      console.log(" addToWishlist ~ error:", error);
+      setAlert(error?.response?.data?.message);
+    } finally {
+      setLoadingWishlistAction(false);
+    }
   };
 
-  // Add to wishlist functionality
-  const handleAddToWishlist = () => {
-    window.alert(
-      `Adding to wishlist : ${book?.titre} \n \n \n This functionality is on development mode`
-    );
+  const removeFromWishlist = async () => {
+    if (!user) navigate("/auth/signin");
+    setLoadingWishlistAction(true);
+    try {
+      const response = await axios.delete(
+        `${livresApiURL}/wishlist/${book._id}`,
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      if (response.data?.success) {
+        setAlert(response.data?.message);
+        dispatch(
+          setUser({
+            ...user,
+            wishlist: user.wishlist.filter((id) => id !== book._id),
+          })
+        );
+      }
+    } catch (error) {
+      console.log(" removeFromWishlist ~ error:", error);
+      setAlert(error?.response?.data?.message);
+    } finally {
+      setLoadingWishlistAction(false);
+    }
+  };
+
+  const handleWishlistAction = () => {
+    if (user?.wishlist?.includes(book._id)) removeFromWishlist();
+    else addToWishlist();
   };
 
   return (
@@ -101,7 +160,7 @@ const BooksDetailsTop = ({ book }) => {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={handleLoanBook}
+                    onClick={() => window.alert("this feature is under fixing")}
                     disabled={book?.quantite <= 0}
                     className={`flex-1 font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center ${
                       book?.quantite <= 0
@@ -116,11 +175,27 @@ const BooksDetailsTop = ({ book }) => {
                   </button>
 
                   <button
-                    onClick={handleAddToWishlist}
-                    className="flex-none font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center border-2 border-purple-200 dark:border-purple-900/30 text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 active:scale-95"
+                    disabled={loadingWishlistAction}
+                    onClick={handleWishlistAction}
+                    className={`flex-none font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center border-2 active:scale-95 ${
+                      user?.wishlist?.includes(book._id)
+                        ? "border-red-200 dark:border-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        : "border-purple-200 dark:border-purple-900/30 text-purple-700 dark:text-purple-400 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                    }`}
                   >
-                    <Bookmark className="mr-2" size={20} />
-                    Save
+                    {loadingWishlistAction ? (
+                      <Loader className="h-5 w-5 text-blue-500 animate-spin" />
+                    ) : user?.wishlist?.includes(book._id) ? (
+                      <>
+                        <BookmarkX className="mr-2" size={20} />
+                        Remouve
+                      </>
+                    ) : (
+                      <>
+                        <Bookmark className="mr-2" size={20} />
+                        Save
+                      </>
+                    )}
                   </button>
                 </div>
               </div>

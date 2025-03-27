@@ -6,8 +6,11 @@ import { Loader, AlertTriangle, Layers } from "lucide-react";
 import BooksList from "../components/UI/BooksList.jsx";
 import BooksHeaderFilter from "../components/UI/BooksHeaderFilter.jsx";
 import BooksPagination from "../components/UI/BooksPagination.jsx";
+import { useSelector } from "react-redux";
 
 const Books = () => {
+  const { user } = useSelector((state) => state.user);
+
   const [books, setBooks] = useState([]);
   const [filteredBooks, setFilteredBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,46 +29,44 @@ const Books = () => {
   const currentBooks = filteredBooks.slice(indexOfFirstBook, indexOfLastBook);
 
   // Fetch books data
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const response = await axios.get(`${livresApiURL}/`);
+  const fetchBooks = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(`${livresApiURL}/`);
 
-        if (response.data.success) {
-          setBooks(response.data?.data?.livres);
-          setFilteredBooks(response.data.data.livres);
-        } else {
-          setError("Failed to fetch books");
-        }
-      } catch (err) {
-        setError("An error occurred while fetching books");
-        console.error(err);
-      } finally {
-        setLoading(false);
+      if (response.data.success) {
+        setBooks(response.data?.data?.livres);
+        setFilteredBooks(response.data.data.livres);
+      } else {
+        setError("Failed to fetch books");
       }
-    };
-
-    fetchBooks();
-  }, []);
+    } catch (err) {
+      setError("An error occurred while fetching books");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch categories data
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setLoadingCategories(true);
-      try {
-        const response = await axios.get(`${categoriesApiURL}/`);
-        if (response.data.success) {
-          setCategories(response.data?.data?.categories);
-        }
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoadingCategories(false);
+  const fetchCategories = async () => {
+    setLoadingCategories(true);
+    try {
+      const response = await axios.get(`${categoriesApiURL}/`);
+      if (response.data.success) {
+        setCategories(response.data?.data?.categories);
       }
-    };
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoadingCategories(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchBooks();
     fetchCategories();
-  }, []);
+  }, [user]);
 
   //  Search term
   const sendSearchTerm = (term) => {
@@ -124,7 +125,11 @@ const Books = () => {
       ) : (
         <>
           {/* Books grid */}
-          <BooksList books={currentBooks} viewMode={viewMode} />
+          <BooksList
+            books={currentBooks}
+            viewMode={viewMode}
+            fetchBooks={fetchBooks}
+          />
         </>
       )}
 

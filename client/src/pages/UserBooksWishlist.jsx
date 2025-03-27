@@ -1,12 +1,13 @@
 import React, { useEffect, useMemo, useState } from "react";
 import UserSideBar from "../components/UI/UserSideBar";
-import BookCard from "../components/UI/BookCard.jsx";
+import BookCard from "../components/UI/BookCardDiscover.jsx";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
 import { Search, Filter, X, Plus, Grid, List, Loader } from "lucide-react";
 import { categoriesApiURL, livresApiURL } from "../services/api.js";
 import { useSelector } from "react-redux";
+import ManagementAlert from "../components/UI/ManagementAlert.jsx";
 
 const UserBooksWishlist = () => {
   const { user } = useSelector((state) => state.user);
@@ -14,7 +15,7 @@ const UserBooksWishlist = () => {
   const [books, setBooks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [message, setMessage] = useState("");
+  const [alert, setAlert] = useState({ message: "", success: false });
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("");
   const [langueFilter, setLangueFilter] = useState("");
@@ -29,32 +30,39 @@ const UserBooksWishlist = () => {
   }, [user]);
 
   // Fetch Books
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const response = await axios.get(`${livresApiURL}/wishlist`);
-        setBooks(response.data.data.livres);
-      } catch (error) {
-        setMessage("Error fetching books!");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
+  const fetchBooks = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${livresApiURL}/wishlist`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${user.token}` },
+      });
+      setBooks(response.data?.data?.livres);
+    } catch (error) {
+      setAlert({
+        message: error.response?.data?.message || "Error fetching books!",
+        success: false,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // Fetch Categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await axios.get(`${categoriesApiURL}/`);
-        setCategories(response.data?.data?.categories);
-      } catch (error) {
-        setMessage("Error fetching categories!");
-      }
-    };
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`${categoriesApiURL}/`);
+      setCategories(response.data?.data?.categories);
+    } catch (error) {
+      setAlert({
+        message: error.response?.data?.message || "Error fetching books!",
+        success: false,
+      });
+    }
+  };
 
+  useEffect(() => {
+    fetchBooks();
     fetchCategories();
   }, []);
 
@@ -68,7 +76,6 @@ const UserBooksWishlist = () => {
       : true;
     const matchesLangue = langueFilter ? book.langue === langueFilter : true;
     const matchesDisponible = disponibleFilter ? book.quantite > 0 : true;
-
     return (
       matchesSearch && matchesCategory && matchesLangue && matchesDisponible
     );
@@ -140,7 +147,7 @@ const UserBooksWishlist = () => {
                 </div>
 
                 {/* Category Filter */}
-                <div className="relative">
+                {/* <div className="relative">
                   <select
                     value={categoryFilter}
                     onChange={(e) => setCategoryFilter(e.target.value)}
@@ -157,10 +164,10 @@ const UserBooksWishlist = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     size={20}
                   />
-                </div>
+                </div> */}
 
                 {/* Language Filter */}
-                <div className="relative">
+                {/* <div className="relative">
                   <select
                     value={langueFilter}
                     onChange={(e) => setLangueFilter(e.target.value)}
@@ -169,16 +176,15 @@ const UserBooksWishlist = () => {
                     <option value="">All Languages</option>
                     <option value="Français">Français</option>
                     <option value="Anglais">Anglais</option>
-                    {/* Add more languages as needed */}
                   </select>
                   <Filter
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     size={20}
                   />
-                </div>
+                </div> */}
 
                 {/* Disponible Filter */}
-                <div className="relative">
+                {/* <div className="relative">
                   <select
                     value={disponibleFilter}
                     onChange={(e) => setDisponibleFilter(e.target.value)}
@@ -192,7 +198,7 @@ const UserBooksWishlist = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
                     size={20}
                   />
-                </div>
+                </div> */}
 
                 {/* Reset Filters */}
                 {(searchTerm ||
@@ -212,50 +218,52 @@ const UserBooksWishlist = () => {
             {/* Books List */}
             <div className="p-6 max-h-screen overflow-y-auto">
               {loading ? (
-                <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                  <div className="flex justify-center items-center h-64">
-                    <Loader className="h-8 w-8 text-blue-500 animate-spin" />
-                  </div>
-                </div>
-              ) : filteredBooks.length === 0 ? (
-                // <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                //   {message || "No books found!"}
-                // </div>
-                <div
-                  className={`${
-                    viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
-                      : "space-y-6"
-                  }`}
-                >
-                  <h1 className="text-red-500 text-4xl md:text-8xl font-bold text-center col-span-2 pt-5">
-                    404
-                  </h1>
-                  <h3 className="text-red-500 text-xl font-bold text-center col-span-2">
-                    This Earia is under fixing!!
-                  </h3>
-                  {/* {filteredBooks.map((book) => (
-                    <BookCard key={book._id} book={book} viewMode={viewMode} />
-                  ))} */}
+                <div className="flex justify-center items-center h-64">
+                  <Loader className="h-8 w-8 text-blue-500 animate-spin" />
                 </div>
               ) : (
-                <div
-                  className={`${
-                    viewMode === "grid"
-                      ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
-                      : "space-y-6"
-                  }`}
-                >
-                  <h1 className="text-red-500 text-4xl md:text-8xl font-bold text-center col-span-2 pt-5">
-                    404
-                  </h1>
-                  <h3 className="text-red-500 text-xl font-bold text-center col-span-2">
-                    This Earia is under fixing!!
-                  </h3>
-                  {/* {filteredBooks.map((book) => (
-                    <BookCard key={book._id} book={book} viewMode={viewMode} />
-                  ))} */}
-                </div>
+                <>
+                  {alert.message && (
+                    <ManagementAlert
+                      alert={alert}
+                      setAlert={setAlert}
+                      close={false}
+                    />
+                  )}
+
+                  {filteredBooks.length > 0 && (
+                    <>
+                      <div
+                        className={`${
+                          viewMode === "grid"
+                            ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6"
+                            : "space-y-6"
+                        }`}
+                      >
+                        {filteredBooks.map((book) => (
+                          <div key={book._id} className="relative group">
+                            <BookCard
+                              book={book}
+                              setAlert={setAlert}
+                              fetchBooks={fetchBooks}
+                              viewMode={viewMode}
+                            />
+                          </div>
+                        ))}
+                      </div>
+
+                      {/* Pagination */}
+                      {/* <BooksPagination
+                        filteredBooks={filteredBooks}
+                        indexOfFirstBook={indexOfFirstBook}
+                        indexOfLastBook={indexOfLastBook}
+                        booksPerPage={booksPerPage}
+                        setCurrentPage={setCurrentPage}
+                        currentPage={currentPage}
+                      /> */}
+                    </>
+                  )}
+                </>
               )}
             </div>
           </div>
