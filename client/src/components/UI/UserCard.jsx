@@ -53,7 +53,10 @@ const UserCard = ({ user, viewMode, fetchUsers }) => {
       `}
         >
           <img
-            src={`https://ui-avatars.com/api/?name=${user.nom}&background=random`}
+            src={
+              user?.profilePic ||
+              `https://ui-avatars.com/api/?name=${user.nom}&background=random`
+            }
             alt={user.nom}
             className={`
             rounded-full object-cover

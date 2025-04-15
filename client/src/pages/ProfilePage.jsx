@@ -20,6 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { clientsApiURL } from "../services/api";
 import { setUser } from "../features/UserSlice.jsx";
+import { compressImage, encodeToBase64 } from "../utils/Base64.js";
 
 const ProfileEditPage = () => {
   const { user } = useSelector((state) => state.user);
@@ -32,6 +33,7 @@ const ProfileEditPage = () => {
   const [activeTab, setActiveTab] = useState("profile");
 
   const [formData, setFormData] = useState({
+    profilePic: "",
     nom: "",
     email: "",
     adresse: "",
@@ -100,6 +102,7 @@ const ProfileEditPage = () => {
   // Handle Form Change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    // console.log(" ProfileEditPage ~ formData:", formData);
   };
 
   // Handle Social Form Change
@@ -122,13 +125,10 @@ const ProfileEditPage = () => {
   };
 
   // Image Upload
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onloadend = () => {
-      setFormData(formData);
-    };
+    const fileBase64 = await encodeToBase64(file);
+    setFormData({ ...formData, profilePic: fileBase64 });
   };
 
   // handle profile form submit
@@ -138,13 +138,25 @@ const ProfileEditPage = () => {
 
     try {
       // Ensure formData only contains allowed fields
-      const allowedUpdates = ["nom", "email", "adresse", "socials"];
+      const allowedUpdates = [
+        "profilePic", // base64
+        "nom",
+        "email",
+        "adresse",
+        "socials",
+      ];
+
       const filteredData = {};
       Object.keys(formData).forEach((key) => {
         if (allowedUpdates.includes(key)) {
           filteredData[key] = formData[key];
         }
       });
+
+      // Compress profile picture if it exists
+      if (formData.profilePic && formData.profilePic.startsWith("data:image")) {
+        filteredData.profilePic = await compressImage(formData.profilePic);
+      }
 
       // Send the PUT request with the filtered data
       const response = await axios.put(
@@ -160,7 +172,7 @@ const ProfileEditPage = () => {
 
       fetchUserInfos();
       setAlert({
-        message: response.data?.message || "Profil mis à jour avec succès!",
+        message: response?.data?.message || "Profil mis à jour avec succès!",
         success: true,
       });
     } catch (error) {
@@ -372,7 +384,11 @@ const ProfileEditPage = () => {
         <div className="flex items-center space-x-4">
           <div className="w-24 h-24 rounded-full overflow-hidden bg-gradient-to-r from-purple-400 to-blue-500 p-1">
             <img
-              src={`https://ui-avatars.com/api/?name=${user?.nom}&background=random`}
+              src={
+                formData?.profilePic ||
+                user?.profilePic ||
+                `https://ui-avatars.com/api/?name=${user?.nom}&background=random`
+              }
               alt="Profile"
               className="w-full h-full rounded-full object-cover border-2 border-white"
             />
@@ -380,8 +396,9 @@ const ProfileEditPage = () => {
           <div className="relative">
             <input
               type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
+              accept=".png, .jpg, jpeg, .ico"
+              onChange={(e) => handleImageUpload(e)}
+              name="profilePic"
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
             <button

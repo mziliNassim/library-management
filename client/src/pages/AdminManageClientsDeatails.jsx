@@ -22,13 +22,6 @@ import {
   FileText,
   ArrowLeft,
   Tag,
-  Check,
-  X,
-  Edit,
-  Trash2,
-  User,
-  CalendarDays,
-  Calendar,
 } from "lucide-react";
 import AdminManageClientDetailsHeader from "../components/UI/AdminManageClientDetailsHeader.jsx";
 

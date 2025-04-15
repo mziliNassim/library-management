@@ -15,6 +15,7 @@ const clientSchema = new mongoose.Schema({
     github: { type: String, required: false, default: "" },
     bio: { type: String, required: false, default: "" },
   },
+  profilePic: { type: String, required: false, default: "" },
 });
 
 // Name validation

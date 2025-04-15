@@ -15,9 +15,12 @@ const AdminManageClientDetailsHeader = ({ dbUser, setIsDeleteModalOpen }) => {
           <div className="flex-shrink-0 relative z-10">
             <div className="rounded-full h-28 w-28 sm:h-36 sm:w-36 border-4 border-white dark:border-gray-800 shadow-xl bg-white dark:bg-gray-800 overflow-hidden">
               <img
-                src={`https://ui-avatars.com/api/?name=${
-                  dbUser?.nom || "Client"
-                }&background=random&size=144`}
+                src={
+                  dbUser?.profilePic ||
+                  `https://ui-avatars.com/api/?name=${
+                    dbUser?.nom || "Client"
+                  }&background=random&size=144`
+                }
                 alt={dbUser?.nom || "Client Profile"}
                 className="h-full w-full object-cover"
               />

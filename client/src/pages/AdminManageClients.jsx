@@ -42,6 +42,7 @@ const AdminManageClients = () => {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     fetchUsers();
   }, [user]);

@@ -31,6 +31,7 @@ const Navbar = () => {
   const [logoutLoding, setLogoutLoading] = useState(false);
   const { theme } = useSelector((state) => state.theme);
   const { user } = useSelector((state) => state.user);
+  console.log(" Navbar ~ user:", user);
   const dispatch = useDispatch();
 
   // Ref for the dropdown
@@ -209,7 +210,10 @@ const Navbar = () => {
                 ref={dropdownRef}
               >
                 <img
-                  src={`https://ui-avatars.com/api/?name=${user?.nom}&background=random`}
+                  src={
+                    user?.profilePic ||
+                    `https://ui-avatars.com/api/?name=${user?.nom}&background=random`
+                  }
                   alt={user?.nom}
                   className="flex h-8 cursor-pointer w-8 rounded-full ring-4 ring-[#7549a6] bg-[#7549a6] dark:bg-[#7549a6] text-sm focus:outline-none focus:ring-2 focus:ring-white"
                   onClick={() => setDropdown(!dropdown)}
