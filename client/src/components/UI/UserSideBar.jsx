@@ -45,7 +45,10 @@ const UserSideBar = () => {
           <div className="flex flex-col items-center space-y-4">
             <div className="relative">
               <img
-                src={`https://ui-avatars.com/api/?name=${user?.nom}&background=random`}
+                src={
+                  user?.profilePic ||
+                  `https://ui-avatars.com/api/?name=${user?.nom}&background=random`
+                }
                 alt="Profile"
                 className="w-28 h-28 rounded-full object-cover border-4 border-white/20 shadow-lg transform hover:scale-105 transition-transform duration-300"
               />
