@@ -4,15 +4,7 @@ import { toggleTheme } from "../../features/themeSlice";
 import { adminNavItems, clientNavItems, navigation } from "../../services/data";
 import { useDispatch, useSelector } from "react-redux";
 
-import {
-  FaBars,
-  FaBell,
-  FaTimes,
-  FaUserCircle,
-  FaMoon,
-  FaSun,
-  FaShoppingCart,
-} from "react-icons/fa";
+import { FaBars, FaTimes, FaMoon, FaSun } from "react-icons/fa";
 import { clearUser } from "../../features/UserSlice";
 import { clientsApiURL, livresApiURL } from "../../services/api";
 import { Loader } from "lucide-react";
@@ -31,7 +23,6 @@ const Navbar = () => {
   const [logoutLoding, setLogoutLoading] = useState(false);
   const { theme } = useSelector((state) => state.theme);
   const { user } = useSelector((state) => state.user);
-  console.log(" Navbar ~ user:", user);
   const dispatch = useDispatch();
 
   // Ref for the dropdown

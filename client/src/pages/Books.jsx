@@ -7,6 +7,7 @@ import BooksList from "../components/UI/BooksList.jsx";
 import BooksHeaderFilter from "../components/UI/BooksHeaderFilter.jsx";
 import BooksPagination from "../components/UI/BooksPagination.jsx";
 import { useSelector } from "react-redux";
+import PopupAlert from "../components/UI/PopupAlert.jsx";
 
 const Books = () => {
   const { user } = useSelector((state) => state.user);
@@ -18,7 +19,7 @@ const Books = () => {
   const [categories, setCategories] = useState([]);
   const [loadingCategories, setLoadingCategories] = useState(true);
 
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState({ message: "", success: false });
   const [viewMode, setViewMode] = useState("grid");
 
   // Pagination
@@ -38,11 +39,18 @@ const Books = () => {
         setBooks(response.data?.data?.livres);
         setFilteredBooks(response.data.data.livres);
       } else {
-        setError("Failed to fetch books");
+        setAlert({
+          message: response.data?.message || "Failed to fetch books",
+          success: false,
+        });
       }
     } catch (err) {
-      setError("An error occurred while fetching books");
-      console.error(err);
+      setAlert({
+        message:
+          err.response?.data?.message ||
+          "An error occurred while fetching books",
+        success: false,
+      });
     } finally {
       setLoading(false);
     }
@@ -57,7 +65,7 @@ const Books = () => {
         setCategories(response.data?.data?.categories);
       }
     } catch (err) {
-      console.error(err);
+      console.log(" fetchCategories ~ err:", err);
     } finally {
       setLoadingCategories(false);
     }
@@ -105,19 +113,14 @@ const Books = () => {
         />
       )}
 
+      {alert.message && <PopupAlert alert={alert} setAlert={setAlert} />}
+
       {/* Books grid/list */}
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <Loader className="h-8 w-8 text-blue-500 animate-spin" />
         </div>
-      ) : error && !loading ? (
-        <div className="bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300 p-4 rounded-lg mb-6">
-          <div className="flex items-center">
-            <AlertTriangle className="h-5 w-5 mr-2" />
-            <span>{error}</span>
-          </div>
-        </div>
-      ) : filteredBooks.length === 0 && !loading && !error ? (
+      ) : filteredBooks.length === 0 && !loading && !alert.message ? (
         <div className="flex flex-col items-center justify-center h-64">
           <Layers className="h-8 w-8 text-gray-500" />
           <span className="text-gray-500">No results found</span>
@@ -129,12 +132,13 @@ const Books = () => {
             books={currentBooks}
             viewMode={viewMode}
             fetchBooks={fetchBooks}
+            setAlert={setAlert}
           />
         </>
       )}
 
       {/* Pagination */}
-      {!loading && !error && filteredBooks.length > 0 && (
+      {!loading && !alert.message && filteredBooks.length > 0 && (
         <BooksPagination
           filteredBooks={filteredBooks}
           indexOfFirstBook={indexOfFirstBook}
