@@ -1,11 +1,17 @@
-import { BookOpen } from "lucide-react";
-import { team } from "../services/data"; // Adjust the path as needed
-import { FaLinkedin, FaGithub, FaUser } from "react-icons/fa";
+import React from "react";
+import {
+  BookOpen,
+  ChevronRight,
+  Star,
+  Check,
+  Award,
+  Sparkles,
+} from "lucide-react";
 import { TypeAnimation } from "react-type-animation";
 import { Link } from "react-router-dom";
+import { features, testimonials, stats } from "../services/data";
 
 function Home() {
-  // ==== CSS for Animated Text Background ====
   const animatedTextStyle = {
     backgroundImage: "url('/welcome.png')",
     backgroundClip: "text",
@@ -16,10 +22,8 @@ function Home() {
   };
 
   return (
-    <div className="">
-      {/* ===================================
-          HERO SECTION
-      ==================================== */}
+    <div className="overflow-x-hidden">
+      {/* HERO SECTION  */}
       <section className="relative h-[95vh] overflow-hidden">
         {/* Animated Gradient Background */}
         <div className="absolute inset-0 z-0 bg-gradient-to-r from-purple-500 via-pink-500 to-indigo-500 animate-gradient"></div>
@@ -92,117 +96,243 @@ function Home() {
         </div>
       </section>
 
-      {/* ===================================
-          SERVICES SECTION
-      ==================================== */}
-      <section className="py-20 bg-white dark:bg-[#111827]">
-        <h2 className="text-3xl font-bold text-center mb-12 text-[#8961b3]">
-          Our Services
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 px-6 max-w-6xl mx-auto">
-          {/* Service Card 1 */}
-          <div className="shadow-lg p-6 rounded-lg text-center bg-white dark:bg-[#1e293b] backdrop-blur-sm bg-opacity-50">
-            <div className="p-4 rounded-full inline-block mb-4 bg-[#8961b3] opacity-80">
-              <BookOpen className="h-8 w-8 text-[#000]" />
+      {/* BENEFITS SECTION */}
+      <section className="py-20 bg-gray-50 dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="h-64 overflow-hidden rounded-2xl shadow-lg">
+                <img
+                  src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjd1NjdhZHppZ2xzeDlkYXFhZDRkNjg1OTMzYmM1cWV3OWVyeHRmciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/V8oj5SlnHsZMY/giphy.gif"
+                  alt="Library interior"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="h-64 overflow-hidden rounded-2xl shadow-lg transform translate-y-8">
+                <img
+                  src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2lveDI2aXdhd29meXMzcWppdXR1MTExYWJvbHY5YWd5MWJoa2dlMiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/JrSwnF7PLhgvmNfM8C/giphy.gif"
+                  alt="Reading area"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="h-64 overflow-hidden rounded-2xl shadow-lg">
+                <img
+                  src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExdHpuZDdxYTQzdmNoaHRudXphbXRrb2Y5N2t3NGN1bjRmNXh4N2hmdyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/dsKCuWQJ5oM0rKMMWM/giphy.gif"
+                  alt="Digital resources"
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="h-64 overflow-hidden rounded-2xl shadow-lg transform translate-y-8">
+                <img
+                  src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmhhMmh5cTYxbmtwZDEyMmVxY2UzaTh2dTc3cWltZDNlejdzNjZ6ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/BWEY1LI6WdaN2/giphy.gif"
+                  alt="Community event"
+                  className="w-full h-full object-cover"
+                />
+              </div>
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-[#8961b3]">
-              Personalized Recommendations
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300">
-              Get book recommendations tailored to your interests and reading
-              habits.
-            </p>
-          </div>
 
-          {/* Service Card 2 */}
-          <div className="shadow-lg p-6 rounded-lg text-center bg-white dark:bg-[#1e293b] backdrop-blur-sm bg-opacity-50">
-            <div className="p-4 rounded-full inline-block mb-4 bg-[#8961b3] opacity-80">
-              <BookOpen className="h-8 w-8 text-[#000]" />
-            </div>
-            <h3 className="text-xl font-semibold mb-2 text-[#8961b3]">
-              Content Management Systems
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300">
-              Efficiently manage your digital library with our powerful CMS
-              tools.
-            </p>
-          </div>
+            <div>
+              <div className="inline-flex items-center gap-2 mb-2 px-4 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 font-medium text-sm">
+                <Award size={16} />
+                <span>Why Choose LibriTech</span>
+              </div>
 
-          {/* Service Card 3 */}
-          <div className="shadow-lg p-6 rounded-lg text-center bg-white dark:bg-[#1e293b] backdrop-blur-sm bg-opacity-50">
-            <div className="p-4 rounded-full inline-block mb-4 bg-[#8961b3] opacity-80">
-              <BookOpen className="h-8 w-8 text-[#000]" />
+              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+                The Perfect Blend of
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400">
+                  {" "}
+                  Traditional & Digital
+                </span>
+              </h2>
+
+              <p className="text-lg text-gray-600 dark:text-gray-300 mb-8">
+                LibriTech offers a unique library experience that combines the
+                best aspects of traditional libraries with the convenience and
+                innovation of modern technology.
+              </p>
+
+              <ul className="space-y-4">
+                {[
+                  "Access thousands of books, e-books, and audiobooks",
+                  "Personalized recommendations based on your reading preferences",
+                  "Join reading groups and cultural events",
+                  "Advanced digital catalog with powerful search features",
+                  "Professional librarians available for consultation",
+                ].map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <Check className="h-6 w-6 text-green-500 dark:text-green-400 mr-2 flex-shrink-0 mt-0.5" />
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {item}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                to="/libritech/about-us"
+                className="mt-8 inline-flex items-center justify-center px-6 py-3 rounded-xl bg-purple-600 text-white font-medium hover:bg-purple-700 transition-colors shadow-md hover:shadow-lg"
+              >
+                Learn More About Us
+                <ChevronRight size={18} className="ml-1" />
+              </Link>
             </div>
-            <h3 className="text-xl font-semibold mb-2 text-[#8961b3]">
-              Secure Cloud Storage
-            </h3>
-            <p className="text-gray-700 dark:text-gray-300">
-              Store your eBooks safely and access them from any device with
-              ease.
-            </p>
           </div>
         </div>
       </section>
 
-      {/* ===================================
-          TEAM SECTION
-      ==================================== */}
-      <section className="py-20 bg-[#4a148c]">
-        <h2 className="text-3xl font-bold text-center mb-12 text-[#fff]">
-          Meet the Team
-        </h2>
+      {/* FEATURES SECTION */}
+      <section className="py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-2 px-4 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 font-medium text-sm">
+              <Sparkles size={16} className="animate-pulse" />
+              <span>Innovative Features</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              Everything You Need for Your
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-indigo-600 dark:from-purple-400 dark:to-indigo-400">
+                {" "}
+                Reading Journey
+              </span>
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              LibriTech combines the best of traditional libraries with
+              cutting-edge technology to enhance your reading experience.
+            </p>
+          </div>
 
-        <div className="flex justify-center space-x-12">
-          {team &&
-            team.map((member, index) => (
-              <div
-                key={index}
-                className="w-64 shadow-lg rounded-lg overflow-hidden bg-gray-50 dark:bg-[#1e293b] py-4 backdrop-blur-sm bg-opacity-50"
-              >
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  className="w-32 h-32 object-cover rounded-full mx-auto mb-4"
-                />
-
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-950 dark:text-gray-50">
-                    {member.name}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {features.length &&
+              features?.map((feature, index) => (
+                <div
+                  key={index}
+                  className="bg-white dark:bg-gray-800 p-6 rounded-2xl border border-gray-100 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
+                >
+                  <div className="inline-flex p-3 rounded-lg bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 mb-4">
+                    <feature.icon />
+                  </div>
+                  <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">
+                    {feature.title}
                   </h3>
-                  <p className="text-gray-950 dark:text-gray-500">
-                    {member.role}
+                  <p className="text-gray-600 dark:text-gray-300">
+                    {feature.description}
                   </p>
                 </div>
+              ))}
+          </div>
+        </div>
+      </section>
 
-                <div className="flex justify-center space-x-4">
-                  <a
-                    href={member.socials.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full inline-block bg-[#8961b3] opacity-80 hover:opacity-100"
-                  >
-                    <FaGithub />
-                  </a>
-                  <a
-                    href={member.socials.linkedin}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full inline-block bg-[#8961b3] opacity-80 hover:opacity-100"
-                  >
-                    <FaLinkedin />
-                  </a>
-                  <a
-                    href={member.socials.portfolio}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 rounded-full inline-block bg-[#8961b3] opacity-80 hover:opacity-100"
-                  >
-                    <FaUser />
-                  </a>
+      {/* STATS SECTION */}
+      <section
+        id="stats-section"
+        className="py-16 bg-gradient-to-r from-purple-600 to-indigo-700 dark:from-purple-900 dark:to-indigo-900"
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {stats.length &&
+              stats?.map((stat, index) => (
+                <div
+                  key={index}
+                  className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 text-center border border-white/20 shadow-xl hover:transform hover:-translate-y-1 transition-all duration-300"
+                >
+                  <div className="inline-flex p-4 rounded-full bg-white/20 text-white mb-4">
+                    <stat.icon size={28} />
+                  </div>
+                  <div className="text-3xl font-bold text-white mb-2">
+                    {stat.value}
+                  </div>
+                  <div className="text-white/80">{stat.label}</div>
                 </div>
-              </div>
-            ))}
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIALS SECTION */}
+      <section className="py-20 bg-white dark:bg-gray-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center gap-2 mb-2 px-4 py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-300 font-medium text-sm">
+              <Star size={16} />
+              <span>User Testimonials</span>
+            </div>
+            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-6">
+              What Our Members Are Saying
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Discover how LibriTech is transforming reading experiences for our
+              community members.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {testimonials.length &&
+              testimonials.map((testimonial) => (
+                <div
+                  key={testimonial.id}
+                  className="bg-gray-50 dark:bg-gray-800 p-8 rounded-2xl shadow-lg border border-gray-100 dark:border-gray-700 relative"
+                >
+                  <div className="absolute top-6 right-8 text-purple-100 dark:text-purple-900/30">
+                    <svg
+                      className="h-16 w-16"
+                      fill="currentColor"
+                      viewBox="0 0 32 32"
+                    >
+                      <path d="M10 8v6c0 3.314-2.686 6-6 6H4v4h4c5.523 0 10-4.477 10-10V8h-8zm18 0v6c0 3.314-2.686 6-6 6h-1v4h4c5.523 0 10-4.477 10-10V8h-7z" />
+                    </svg>
+                  </div>
+
+                  <p className="text-gray-600 dark:text-gray-300 mb-8 relative z-10">
+                    {testimonial.text}
+                  </p>
+
+                  <div className="flex items-center">
+                    <img
+                      src={testimonial.avatar}
+                      alt={testimonial.name}
+                      className="h-12 w-12 rounded-full mr-4 border-2 border-purple-500 object-cover"
+                    />
+                    <div>
+                      <h4 className="font-bold text-gray-900 dark:text-white">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-sm text-purple-600 dark:text-purple-400">
+                        {testimonial.role}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CALL TO ACTION */}
+      <section className="py-20 bg-gradient-to-br from-purple-600 to-indigo-800 dark:from-purple-900 dark:to-indigo-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6">
+            Ready to Start Your Reading Journey?
+          </h2>
+          <p className="text-xl text-white/80 mb-10">
+            Join thousands of readers who have transformed their reading
+            experience with LibriTech. Discover new books and track your
+            progress.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link
+              to="/discover/books"
+              className="px-8 py-4 rounded-full text-lg font-semibold bg-white text-purple-700 hover:bg-yellow-100 transition-colors shadow-lg hover:shadow-xl"
+            >
+              Explore Our Collection
+            </Link>
+            <Link
+              to="/libritech/contact-us"
+              className="px-8 py-4 rounded-full text-lg font-semibold bg-purple-500/30 backdrop-blur-sm text-white border border-white/30 hover:bg-purple-500/50 transition-colors shadow-lg hover:shadow-xl"
+            >
+              Contact Us
+            </Link>
+          </div>
         </div>
       </section>
     </div>

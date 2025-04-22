@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import BookCard from "./BookCardDiscover";
 
-const BooksList = ({ books, viewMode, fetchBooks }) => {
-  const [alert, setAlert] = useState({ message: "", success: false });
+const BooksList = ({ books, viewMode, fetchBooks, setAlert }) => {
   return (
     <div
       className={`grid gap-6 ${

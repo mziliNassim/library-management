@@ -10,6 +10,7 @@ const livreSchema = new mongoose.Schema({
   description: { type: String },
   quantite: { type: Number, required: true, default: 0 },
   categorieId: { type: mongoose.Schema.Types.ObjectId, ref: "Categorie" },
+  poster: { type: String, required: false, default: "" }, // base64
 });
 
 livreSchema.methods.checkDisponibilite = function () {

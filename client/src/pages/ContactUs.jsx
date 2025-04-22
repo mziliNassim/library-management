@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   MapPin,
   Phone,
@@ -32,13 +32,12 @@ const ContactUs = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("Form submitted:", formData);
     setFormSubmitted(true);
+    setFormData({ name: "", email: "", subject: "", message: "" });
 
     // Reset form after successful submission
     setTimeout(() => {
       setFormSubmitted(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
     }, 5000);
   };
 
@@ -48,28 +47,28 @@ const ContactUs = () => {
       title: "Our Location",
       content: "Avenue Mohammed V, Marrakech, Morocco",
       cta: "Get Directions",
-      link: "https://maps.google.com",
+      link: "https://www.google.com/maps?ll=31.634621,-8.007853&z=12&t=m&hl=en&gl=US&mapclient=embed&q=Marrakesh+Morocco",
     },
     {
       icon: <Phone size={20} />,
       title: "Phone Number",
-      content: "+212 524 123 456",
+      content: "+212 681930875",
       cta: "Call Us",
-      link: "tel:+212524123456",
+      link: "tel:+212681930875",
     },
     {
       icon: <Mail size={20} />,
       title: "Email Address",
-      content: "contact@marrakech-library.ma",
+      content: "contact@libritech.ma",
       cta: "Send Email",
-      link: "mailto:contact@marrakech-library.ma",
+      link: "mailto:mzilinassim@gmail.com",
     },
     {
       icon: <Clock size={20} />,
       title: "Working Hours",
       content: "Monday - Friday: 9AM - 6PM",
       cta: "See Full Schedule",
-      link: "#schedule",
+      link: "/libritech/Working-Hours",
     },
   ];
 
@@ -154,7 +153,7 @@ const ContactUs = () => {
           {/* Google Map with animation */}
           <div
             id="map-container"
-            className={`w-full h-96 rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-gray-700 transition-all duration-1000 `}
+            className={`w-full h-[80vh] rounded-2xl overflow-hidden shadow-xl border-4 border-white dark:border-gray-700 transition-all duration-1000 `}
           >
             <div className="relative w-full h-full">
               <iframe

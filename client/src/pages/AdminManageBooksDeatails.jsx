@@ -148,12 +148,22 @@ const AdminManageBooksDeatails = () => {
                         <div className="flex flex-col lg:flex-row gap-8 p-6">
                           {/* Left Column - Cover Image */}
                           <div className="lg:w-1/3">
-                            <div className="bg-gray-200 dark:bg-gray-700 rounded-lg aspect-[2/3] flex items-center justify-center overflow-hidden">
-                              <Book
-                                size={80}
-                                className="text-gray-400 dark:text-gray-500"
-                              />
-                            </div>
+                            {book.poster ? (
+                              <div className="bg-gray-200 dark:bg-gray-700 rounded-lg aspect-[2/3] flex items-center justify-center overflow-hidden">
+                                <img
+                                  src={book.poster}
+                                  alt={`${book.titre} cover`}
+                                  className="w-full h-full object-cover"
+                                />
+                              </div>
+                            ) : (
+                              <div className="bg-gray-200 dark:bg-gray-700 rounded-lg aspect-[2/3] flex items-center justify-center overflow-hidden">
+                                <Book
+                                  size={80}
+                                  className="text-gray-400 dark:text-gray-500"
+                                />
+                              </div>
+                            )}
                           </div>
 
                           {/* Right Column - Book Information */}

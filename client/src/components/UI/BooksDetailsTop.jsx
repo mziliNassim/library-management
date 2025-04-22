@@ -1,5 +1,9 @@
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { livresApiURL, empruntsApiURL } from "../../services/api";
+import { setUser } from "../../features/UserSlice";
+
 import {
   Book,
   BookOpen,
@@ -13,14 +17,12 @@ import {
   BookmarkX,
   Loader,
 } from "lucide-react";
-import axios from "axios";
-import { livresApiURL } from "../../services/api";
-import { setUser } from "../../features/UserSlice";
 
 const BooksDetailsTop = ({ book, setAlert }) => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
 
+  const [loadingLoanBook, setLoadingLoanBook] = useState(false);
   const [loadingWishlistAction, setLoadingWishlistAction] = useState(false);
 
   const metadata = [
@@ -36,112 +38,175 @@ const BooksDetailsTop = ({ book, setAlert }) => {
     { icon: <Clock size={18} />, label: "Category", value: book?.categorie },
   ];
 
-  //
-  const addToWishlist = async () => {
-    setLoadingWishlistAction(true);
-    if (!user) navigate("/auth/signin");
-    try {
-      const response = await axios.post(
-        `${livresApiURL}/wishlist/${book._id}`,
-        {}, // Empty body if no data to send
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      if (response.data?.success) {
-        setAlert(response.data?.message);
-        dispatch(setUser({ ...user, wishlist: [...user.wishlist, book._id] }));
-      }
-    } catch (error) {
-      console.log(" addToWishlist ~ error:", error);
-      setAlert(error?.response?.data?.message);
-    } finally {
-      setLoadingWishlistAction(false);
-    }
-  };
-
-  const removeFromWishlist = async () => {
-    if (!user) navigate("/auth/signin");
-    setLoadingWishlistAction(true);
-    try {
-      const response = await axios.delete(
-        `${livresApiURL}/wishlist/${book._id}`,
-        {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
-      );
-      if (response.data?.success) {
-        setAlert(response.data?.message);
-        dispatch(
-          setUser({
-            ...user,
-            wishlist: user.wishlist.filter((id) => id !== book._id),
-          })
-        );
-      }
-    } catch (error) {
-      console.log(" removeFromWishlist ~ error:", error);
-      setAlert(error?.response?.data?.message);
-    } finally {
-      setLoadingWishlistAction(false);
-    }
-  };
-
+  // addToWishlist // removeFromWishlist
   const handleWishlistAction = () => {
+    const addToWishlist = async () => {
+      setLoadingWishlistAction(true);
+      if (!user) navigate("/auth/signin");
+      try {
+        const response = await axios.post(
+          `${livresApiURL}/wishlist/${book._id}`,
+          {}, // Empty body if no data to send
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        if (response.data?.success) {
+          setAlert(response.data?.message);
+          dispatch(
+            setUser({ ...user, wishlist: [...user.wishlist, book._id] })
+          );
+        }
+      } catch (error) {
+        console.log(" addToWishlist ~ error:", error);
+        setAlert(error?.response?.data?.message);
+      } finally {
+        setLoadingWishlistAction(false);
+      }
+    };
+
+    const removeFromWishlist = async () => {
+      if (!user) navigate("/auth/signin");
+      setLoadingWishlistAction(true);
+      try {
+        const response = await axios.delete(
+          `${livresApiURL}/wishlist/${book._id}`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${user.token}`,
+            },
+          }
+        );
+        if (response.data?.success) {
+          setAlert(response.data?.message);
+          dispatch(
+            setUser({
+              ...user,
+              wishlist: user.wishlist.filter((id) => id !== book._id),
+            })
+          );
+        }
+      } catch (error) {
+        console.log(" removeFromWishlist ~ error:", error);
+        setAlert(error?.response?.data?.message);
+      } finally {
+        setLoadingWishlistAction(false);
+      }
+    };
+
     if (user?.wishlist?.includes(book._id)) removeFromWishlist();
     else addToWishlist();
+  };
+
+  // handle loan event
+  const loanCuurentBook = async () => {
+    setLoadingLoanBook(true);
+    try {
+      const response = await axios.post(
+        `${empruntsApiURL}/${book._id}`,
+        {},
+        {
+          headers: { Authorization: `Bearer ${user?.token}` },
+        }
+      );
+
+      if (response.data?.success) {
+        setAlert({
+          message: response.data?.message || "Book loaned successfully!",
+          success: true,
+        });
+        // Update the book quantity in the UI
+        book.quantite--;
+      }
+    } catch (error) {
+      setAlert({
+        message: error?.response?.data?.message || "Failed to loan the book",
+        success: false,
+      });
+    } finally {
+      setLoadingLoanBook(false);
+    }
   };
 
   return (
     <>
       {book && (
-        <div className="relative  overflow-hidden p-6 ">
-          <div className="flex flex-col gap-8 relative z-10">
-            {/* Title Section with decorative underline */}
-            <div className="space-y-4">
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white leading-tight">
-                {book?.titre}
-              </h1>
-              <div className="relative">
-                <p className="text-xl text-purple-600 dark:text-purple-400 font-medium">
-                  by {book?.auteur}
-                </p>
-                <div className="absolute -bottom-3 left-0 h-1 w-24 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full"></div>
-              </div>
-            </div>
-
-            {/* Metadata Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-              {metadata.map(
-                (item, index) =>
-                  item.value && (
-                    <div
-                      key={index}
-                      className="flex items-center gap-4 p-4 rounded-xl bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg border border-purple-100 dark:border-purple-900/20 transition-all duration-300 hover:shadow-xl hover:scale-105 group"
-                    >
-                      <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-md group-hover:scale-110 transition-transform duration-300">
-                        {item.icon}
-                      </div>
-                      <div>
-                        <div className="text-xs uppercase text-gray-500 dark:text-gray-400 font-medium tracking-wider">
-                          {item.label}
-                        </div>
-                        <div className="font-bold text-gray-900 dark:text-white">
-                          {item.value}
-                        </div>
-                      </div>
+        <div className="relative overflow-hidden p-6">
+          {/* Top -- Poster && Details */}
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left Side - Poster */}
+            <div className="lg:w-1/2">
+              {book.poster ? (
+                <div className="relative h-[600px] w-full rounded-2xl overflow-hidden shadow-xl">
+                  <img
+                    src={book.poster}
+                    alt={book.titre}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-900/40 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-6">
+                    <h1 className="text-4xl sm:text-5xl font-bold text-white leading-tight">
+                      {book.titre}
+                    </h1>
+                    <p className="text-xl text-purple-200 font-medium mt-2">
+                      by {book.auteur}
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative h-[600px] w-full rounded-2xl overflow-hidden shadow-xl bg-gradient-to-br from-purple-600 to-indigo-600">
+                  <div className="absolute inset-0 bg-grid-white/10" />
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="text-center">
+                      <span className="text-8xl font-black text-white/90">
+                        {book.titre[0]}
+                      </span>
+                      <h1 className="text-4xl sm:text-5xl font-bold text-white mt-4">
+                        {book.titre}
+                      </h1>
+                      <p className="text-xl text-purple-200 font-medium mt-2">
+                        by {book.auteur}
+                      </p>
                     </div>
-                  )
+                  </div>
+                </div>
               )}
             </div>
 
-            {/* Description Section */}
+            {/* Right Side - Metadata Cards */}
+            <div className="lg:w-1/2">
+              <div className="grid grid-cols-1 gap-4 h-full">
+                {metadata.map(
+                  (item, index) =>
+                    item.value && (
+                      <div
+                        key={index}
+                        className="flex items-center gap-4 p-4 rounded-xl bg-white/80 dark:bg-gray-800/50 backdrop-blur-sm shadow-lg border border-purple-100 dark:border-purple-900/20 transition-all duration-300 hover:shadow-xl hover:scale-105 group"
+                      >
+                        <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 text-white shadow-md group-hover:scale-110 transition-transform duration-300">
+                          {item.icon}
+                        </div>
+                        <div>
+                          <div className="text-xs uppercase text-gray-500 dark:text-gray-400 font-medium tracking-wider">
+                            {item.label}
+                          </div>
+                          <div className="font-bold text-gray-900 dark:text-white">
+                            {item.value}
+                          </div>
+                        </div>
+                      </div>
+                    )
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Description Section */}
+          <div className="mt-8">
             <div className="bg-white/90 dark:bg-gray-800/70 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-purple-100 dark:border-purple-900/20">
               <div className="flex items-center mb-6">
                 <Star className="text-yellow-500 mr-2" size={22} />
@@ -154,24 +219,32 @@ const BooksDetailsTop = ({ book, setAlert }) => {
                   "No description available for this title."}
               </p>
             </div>
+          </div>
 
-            {/* Action Buttons */}
+          {/* Action Buttons */}
+          <div className="mt-8">
             <div className="bg-gradient-to-r from-purple-500 to-indigo-600 rounded-2xl p-1 shadow-xl">
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6">
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
-                    onClick={() => window.alert("this feature is under fixing")}
-                    disabled={book?.quantite <= 0}
+                    onClick={loanCuurentBook}
+                    disabled={book?.quantite <= 0 || loadingLoanBook}
                     className={`flex-1 font-bold py-4 px-6 rounded-xl transition-all duration-300 flex items-center justify-center ${
                       book?.quantite <= 0
                         ? "bg-gray-300 dark:bg-gray-700 cursor-not-allowed text-gray-500 dark:text-gray-400"
                         : "bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 active:scale-95 text-white cursor-pointer shadow-lg hover:shadow-xl"
                     }`}
                   >
-                    <Book className="mr-3" size={20} />
-                    {book?.quantite <= 0
-                      ? "Unavailable"
-                      : `Loan This Book (${book?.quantite} available)`}
+                    {loadingLoanBook ? (
+                      <Loader className="h-5 w-5 text-blue-500 animate-spin" />
+                    ) : (
+                      <>
+                        <Book className="mr-3" size={20} />
+                        {book?.quantite <= 0
+                          ? "Unavailable"
+                          : `Loan This Book (${book?.quantite} available)`}
+                      </>
+                    )}
                   </button>
 
                   <button

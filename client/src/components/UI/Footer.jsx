@@ -21,11 +21,14 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold">Quick Links</h3>
             <ul className="mt-3 space-y-2">
-              {["About Us", "Services", "Blog"].map((item, index) => (
+              {["about us", "blog"].map((item, index) => (
                 <li key={index}>
-                  <a href="#" className="transition">
+                  <Link
+                    to={`/libritech/${item === "about us" ? "about-us" : item}`}
+                    className="transition capitalize"
+                  >
                     {item}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -35,11 +38,16 @@ const Footer = () => {
           <div>
             <h3 className="text-lg font-semibold">Support</h3>
             <ul className="mt-3 space-y-2">
-              {["Help Center", "Contact Us", "FAQ"].map((item, index) => (
+              {["Contact Us", "FAQ"].map((item, index) => (
                 <li key={index}>
-                  <a href="#" className="transition">
+                  <Link
+                    to={`/libritech/${
+                      item === "Contact Us" ? "contact-us" : item
+                    }`}
+                    className="transition capitalize"
+                  >
                     {item}
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

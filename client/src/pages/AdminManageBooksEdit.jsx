@@ -3,9 +3,17 @@ import { useSelector } from "react-redux";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { Plus, Loader, ArrowLeft, Save } from "lucide-react";
+import {
+  Plus,
+  Loader,
+  ArrowLeft,
+  Save,
+  Image as ImageIcon,
+  Upload,
+} from "lucide-react";
 import { livresApiURL, categoriesApiURL } from "../services/api.js";
 import { languages } from "../services/data";
+import { encodeToBase64, compressImage } from "../utils/Base64.js";
 
 import UserSideBar from "../components/UI/UserSideBar";
 import ManagementAlert from "../components/UI/ManagementAlert.jsx";
@@ -24,7 +32,9 @@ const AdminManageBooksEdit = () => {
     langue: "",
     quantite: 0,
     description: "",
+    poster: "",
   });
+  const [posterPreview, setPosterPreview] = useState(null);
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadingUpdate, setLoadingUpdate] = useState(false);
@@ -49,7 +59,11 @@ const AdminManageBooksEdit = () => {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      setBookData(response.data?.data?.livre);
+      const book = response.data?.data?.livre;
+      setBookData(book);
+      if (book.poster) {
+        setPosterPreview(book.poster);
+      }
     } catch (error) {
       setAlert({
         message: error.response?.data?.message || "Error fetching book!",
@@ -90,6 +104,38 @@ const AdminManageBooksEdit = () => {
       ...bookData,
       [name]: value,
     });
+  };
+
+  // Handle poster image change
+  const handlePosterChange = async (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file type
+      if (!["image/png", "image/jpeg", "image/jpg"].includes(file.type)) {
+        setAlert({
+          message: "Please upload a valid image file (PNG, JPG, JPEG)",
+          success: false,
+        });
+        return;
+      }
+
+      try {
+        // Convert file to base64
+        const base64String = await encodeToBase64(file);
+
+        // Compress the image with more aggressive settings
+        const compressedBase64 = await compressImage(base64String, 600, 600);
+
+        // Update state with compressed image
+        setPosterPreview(compressedBase64);
+        setBookData((prev) => ({ ...prev, poster: compressedBase64 }));
+      } catch (error) {
+        setAlert({
+          message: "Error processing image. Please try again.",
+          success: false,
+        });
+      }
+    }
   };
 
   // Update book
@@ -187,6 +233,51 @@ const AdminManageBooksEdit = () => {
                       >
                         <div className="bg-white dark:bg-gray-800 rounded-lg">
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            {/* Poster Upload Section */}
+                            <div className="col-span-2">
+                              <div className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg">
+                                {posterPreview ? (
+                                  <div className="relative group">
+                                    <img
+                                      src={posterPreview}
+                                      alt="Book Poster Preview"
+                                      className="w-full max-h-64 object-contain rounded-lg shadow-lg"
+                                    />
+                                    <div className="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity duration-200 rounded-lg flex items-center justify-center">
+                                      <label className="cursor-pointer bg-white text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                                        <Upload className="h-5 w-5 inline-block mr-2" />
+                                        Change Image
+                                        <input
+                                          type="file"
+                                          accept=".png,.jpg,.jpeg"
+                                          onChange={handlePosterChange}
+                                          className="hidden"
+                                        />
+                                      </label>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <label className="cursor-pointer flex flex-col items-center">
+                                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                                      <ImageIcon className="h-8 w-8 text-gray-400" />
+                                    </div>
+                                    <span className="text-gray-600 dark:text-gray-300 mb-2">
+                                      Click to upload book poster
+                                    </span>
+                                    <span className="text-sm text-gray-500 dark:text-gray-400">
+                                      PNG, JPG, JPEG up to 5MB
+                                    </span>
+                                    <input
+                                      type="file"
+                                      accept=".png,.jpg,.jpeg"
+                                      onChange={handlePosterChange}
+                                      className="hidden"
+                                    />
+                                  </label>
+                                )}
+                              </div>
+                            </div>
+
                             {/* Title */}
                             <div className="col-span-2">
                               <label

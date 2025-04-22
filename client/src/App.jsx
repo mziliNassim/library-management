@@ -13,8 +13,12 @@ import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
 
 import Home from "./pages/Home.jsx";
-import ContactUs from "./pages/ContactUs.jsx";
 import NotFound from "./pages/NotFound.jsx";
+
+import ContactUs from "./pages/ContactUs.jsx";
+import AboutUS from "./pages/AboutUS.jsx";
+import Blog from "./pages/Blog.jsx";
+import FAQ from "./pages/FAQ.jsx";
 
 import Books from "./pages/Books.jsx";
 import BooksDetails from "./pages/BooksDetails.jsx";
@@ -103,7 +107,15 @@ const App = () => {
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/LibriTech/contact" element={<ContactUs />} />
+
+              {/* libriTech */}
+              <Route path="/libriTech">
+                <Route path="" element={<AboutUS />} />
+                <Route path="about-us" element={<AboutUS />} />
+                <Route path="contact-us" element={<ContactUs />} />
+                <Route path="blog" element={<Blog />} />
+                <Route path="FAQ" element={<FAQ />} />
+              </Route>
 
               {/* Authentification */}
               <Route path="/auth">

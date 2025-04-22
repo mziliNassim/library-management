@@ -1,19 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import BooksDetailsTop from "../components/UI/BooksDetailsTop";
 import ManagementAlert from "../components/UI/ManagementAlert";
 import SimilarBooksSection from "../components/UI/SimilarBooksSection";
 import axios from "axios";
 import { livresApiURL } from "../services/api";
 import { Loader } from "lucide-react";
+import PopupAlert from "../components/UI/PopupAlert";
 
 const BooksDetails = () => {
   const { id } = useParams();
+
   const [isLoading, setIsLoading] = useState(true);
   const [book, setBook] = useState(null);
   const [similarBooks, setSimilarBooks] = useState([]);
   const [alert, setAlert] = useState({ message: "", success: false });
 
+  // Fetch book details
   useEffect(() => {
     const fetchBooks = async () => {
       setIsLoading(true);
@@ -59,9 +62,7 @@ const BooksDetails = () => {
         </div>
       ) : (
         <>
-          {alert.message && (
-            <ManagementAlert alert={alert} setAlert={setAlert} />
-          )}
+          {alert.message && <PopupAlert alert={alert} setAlert={setAlert} />}
 
           {book ? (
             <>
@@ -72,10 +73,36 @@ const BooksDetails = () => {
               )}
             </>
           ) : (
-            <div className="text-center py-8">
-              <p className="text-lg text-gray-600 dark:text-gray-300">
-                Book not found
+            <div className="flex flex-col items-center justify-center min-h-[400px] bg-gray-50 dark:bg-gray-800 rounded-lg p-8">
+              <div className="w-24 h-24 mb-6 text-gray-400 dark:text-gray-500">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-full h-full"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                  />
+                </svg>
+              </div>
+              <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                Book Not Found
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-center max-w-md mb-6">
+                We couldn't find the book you're looking for. It might have been
+                removed or the URL might be incorrect.
               </p>
+              <Link
+                to="/discover"
+                className="px-6 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200"
+              >
+                Explore Our Collection
+              </Link>
             </div>
           )}
         </>
