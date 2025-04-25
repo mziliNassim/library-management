@@ -7,7 +7,6 @@ import {
   Award,
   Sparkles,
 } from "lucide-react";
-
 import { TypeAnimation } from "react-type-animation";
 import { Link } from "react-router-dom";
 import { features, testimonials, stats } from "../services/data";

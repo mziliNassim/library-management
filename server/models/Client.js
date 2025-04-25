@@ -16,7 +16,6 @@ const clientSchema = new mongoose.Schema({
     bio: { type: String, required: false, default: "" },
   },
   profilePic: { type: String, required: false, default: "" },
-
   resetPasswordToken: { type: String, required: false },
   resetPasswordExpiresAt: { type: Date, required: false },
 });

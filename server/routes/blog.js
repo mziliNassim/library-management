@@ -10,6 +10,7 @@ const {
   updateArticle,
 } = require("../controllers/blog.controller.js");
 
+
 // @desc    Get all articles
 // @route   POST /api/blog
 // @access  Client

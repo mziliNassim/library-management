@@ -204,6 +204,7 @@ const resetPassword = async (req, res) => {
 // Profile
 const updateProfile = async (req, res) => {
   try {
+    console.log(" updateProfile ~ req.body:", req.body);
     const updates = Object.keys(req.body);
     const allowedUpdates = ["nom", "email", "adresse", "socials", "profilePic"];
     const isValidOperation = updates.every((update) =>
