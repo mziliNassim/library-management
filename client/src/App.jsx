@@ -11,6 +11,7 @@ import LoadingApp from "./components/UI/LoadingApp.jsx";
 
 import Login from "./pages/LoginPage.jsx";
 import Register from "./pages/RegisterPage.jsx";
+import ResetPasswordPage from "./pages/ResetPasswordPage.jsx";
 
 import Home from "./pages/Home.jsx";
 import NotFound from "./pages/NotFound.jsx";
@@ -67,12 +68,16 @@ const App = () => {
           );
 
           if (response.data?.success) {
-            const response = await axios.get(`${clientsApiURL}/me`, {
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-            });
+            const response = await axios.get(
+              `${clientsApiURL}/me`,
+
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
             // set user data in global data (redux)
             dispatch(setUser({ ...response.data.data.client, token }));
           } else dispatch(clearUser());
@@ -122,6 +127,10 @@ const App = () => {
                 <Route path="" element={<Register />} />
                 <Route path="register" element={<Register />} />
                 <Route path="signin" element={<Login />} />
+                <Route
+                  path="reset-password/:token"
+                  element={<ResetPasswordPage />}
+                />
               </Route>
 
               {/* Books */}

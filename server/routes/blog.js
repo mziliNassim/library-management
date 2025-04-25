@@ -3,7 +3,12 @@ const router = Router();
 
 const { authenticate, authorize } = require("../middlewares/auth");
 
-const {} = require("../controllers/blog.controller");
+const {
+  getArticles,
+  getArticleByID,
+  createArticle,
+  updateArticle,
+} = require("../controllers/blog.controller.js");
 
 // @desc    Get all articles
 // @route   POST /api/blog

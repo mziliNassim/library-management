@@ -1,7 +1,16 @@
+const crypto = require("crypto");
+const bcrypt = require("bcryptjs");
+
 const Client = require("../models/Client");
 const Emprunt = require("../models/Emprunt");
-const auth = require("../middlewares/auth");
 const TokenBlacklist = require("../models/TokenBlacklist");
+
+const auth = require("../middlewares/auth");
+
+const {
+  sendResetPasswordEmail,
+  sendResetSuccessEmail,
+} = require("../mail/emails.js");
 
 // Authentication
 const register = async (req, res) => {
@@ -118,10 +127,83 @@ const logout = async (req, res) => {
   }
 };
 
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+  try {
+    const client = await Client.findOne({ email });
+    if (!client) {
+      return res.status(500).json({
+        success: false,
+        message: "Invalid email address!",
+        data: null,
+      });
+    }
+
+    // generate reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+    const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000; // 1 hours
+
+    client.resetPasswordToken = resetToken;
+    client.resetPasswordExpiresAt = resetTokenExpiresAt;
+
+    await client.save();
+
+    // send email
+    await sendResetPasswordEmail(
+      client.email,
+      `${process.env.CLIENT_URL}/auth/reset-password/${resetToken}`
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Reset password link sent to your email",
+      user: null,
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, data: null });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const client = await Client.findOne({
+      resetPasswordToken: token,
+      resetPasswordExpiresAt: { $gt: Date.now() },
+    });
+
+    if (!client) {
+      return res.status(400).json({
+        state: "warning",
+        message: "Invalid or expired reset link",
+      });
+    }
+
+    // hash && update Password
+    client.password = password;
+    client.resetPasswordToken = undefined;
+    client.resetPasswordExpiresAt = undefined;
+    await client.save();
+    await sendResetSuccessEmail(client.email);
+
+    return res.status(201).json({
+      success: true,
+      message: "Password reset successfully",
+    });
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ success: false, message: error.message, data: null });
+  }
+};
+
 // Profile
 const updateProfile = async (req, res) => {
   try {
-    console.log(" updateProfile ~ req.body:", req.body);
     const updates = Object.keys(req.body);
     const allowedUpdates = ["nom", "email", "adresse", "socials", "profilePic"];
     const isValidOperation = updates.every((update) =>
@@ -398,4 +480,6 @@ module.exports = {
   getClientById,
   updateClient,
   deleteClient,
+  forgotPassword,
+  resetPassword,
 };

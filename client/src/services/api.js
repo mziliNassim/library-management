@@ -1,7 +1,6 @@
 // "http://localhost:8888";
 
-export const clientsApiURL =
-  "https://gestion-bibliotique-pfe.netlify.app/api/clients";
+export const clientsApiURL = "http://localhost:8888/api/clients";
 
 export const livresApiURL =
   "https://gestion-bibliotique-pfe.netlify.app/api/livres";

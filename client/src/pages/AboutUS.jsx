@@ -3,6 +3,7 @@ import { team } from "../services/data"; // Adjust the path as needed
 import { TypeAnimation } from "react-type-animation";
 import { Link } from "react-router-dom";
 import { FaLinkedin, FaGithub, FaUser } from "react-icons/fa";
+
 import {
   BookOpen,
   Users,

@@ -19,6 +19,8 @@ const {
   getClientById,
   updateClient,
   deleteClient,
+  forgotPassword,
+  resetPassword,
 } = require("../controllers/clients.controller");
 
 // ! ========== Token Validation ==========
@@ -43,6 +45,16 @@ router.post("/login", login);
 // @route   POST /api/clients/logout
 // @access  Client
 router.post("/logout", authenticate, logout);
+
+// @desc
+// @route   POST /api/clients/forgot-password
+// @access  Client
+router.post("/forgot-password", forgotPassword);
+
+// @desc
+// @route   POST /api/clients/reset-password/:token
+// @access  Client
+router.post("/reset-password/:token", resetPassword);
 
 // ! ========== Profile ==========
 
