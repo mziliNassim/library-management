@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { clientsApiURL } from "../../services/api";
+import axios from "axios";
 
 const Login = ({ onLogin }) => {
-  const [alert, setAlert] = useState(""); // Alert messages
   const [loading, setLoading] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false); // Toggle forgot password mode
   const [resetEmail, setResetEmail] = useState(""); // Email for password reset
   const [resetMessage, setResetMessage] = useState(""); // Reset email response
+  const [alert, setAlert] = useState({
+    message: "",
+    success: false,
+  });
   const [data, setData] = useState({
     email: "",
     password: "",
@@ -21,21 +25,29 @@ const Login = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      const response = await fetch(`${clientsApiURL}/login`, {
-        method: "POST",
+      const response = await axios.post(`${clientsApiURL}/login`, {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        setAlert(result.message || "Login successful!");
-        onLogin(result);
+      if (response.data?.success) {
+        setAlert({
+          message: response.data?.message || "Login successful!",
+          success: true,
+        });
+        onLogin(response.data);
       } else {
-        setAlert(result.message || "Login failed. Please try again.");
+        setAlert({
+          message: response.data?.message || "Login failed. Please try again!",
+          success: false,
+        });
       }
-    } catch {
-      setAlert(result.message || "Network error. Please try again.");
+    } catch (error) {
+      setAlert({
+        message:
+          error.response?.data?.message || "Network error. Please try again.",
+        success: false,
+      });
     } finally {
       setLoading(false);
     }
@@ -83,9 +95,15 @@ const Login = ({ onLogin }) => {
         )}
       </div>
 
-      {alert && (
-        <div className="text-red-500 dark:text-red-400 text-center mb-3">
-          {alert}
+      {alert.message && (
+        <div
+          className={`text-center mb-3 ${
+            alert.success
+              ? "text-green-500 dark:text-green-400"
+              : "text-red-500 dark:text-red-400"
+          }`}
+        >
+          {alert.message}
         </div>
       )}
 

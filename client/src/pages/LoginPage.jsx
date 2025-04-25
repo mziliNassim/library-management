@@ -39,6 +39,7 @@ const LoginPage = () => {
                 {/* Login Form Section */}
                 <div className="w-full md:w-1/2 p-4 md:p-6">
                   <Login onLogin={handleLogin} />
+
                   <p className="text-center text-sm text-gray-600 dark:text-gray-400 mt-4">
                     Don&apos;t have an account?{" "}
                     <Link
@@ -49,6 +50,7 @@ const LoginPage = () => {
                     </Link>
                   </p>
                 </div>
+
                 {/* Lottie Animation Section */}
                 <div className="hidden md:flex md:w-1/2 bg-gradient-to-br from-purple-100 to-blue-100 dark:from-gray-800 dark:to-gray-700 items-center justify-center p-4">
                   <div className="max-w-xs">

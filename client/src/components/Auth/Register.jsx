@@ -5,7 +5,7 @@ import { clientsApiURL } from "../../services/api";
 
 const Register = ({ onSuccess }) => {
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState("");
+  const [alert, setAlert] = useState({ message: "", success: false });
   const [data, setData] = useState({
     nom: "",
     email: "",
@@ -24,14 +24,19 @@ const Register = ({ onSuccess }) => {
     try {
       const response = await axios.post(`${clientsApiURL}/register`, data);
 
-      setAlert(response.data.message || "Account created successfully!");
+      setAlert({
+        message: response.data.message || "Account created successfully!",
+        success: false,
+      });
       onSuccess(response.data);
     } catch (error) {
       // console.error("Registration failed:", error);
-      setAlert(
-        error.response?.data?.message ||
-          "An error occurred during registration."
-      );
+      setAlert({
+        message:
+          error.response?.data?.message ||
+          "An error occurred during registration.",
+        success: false,
+      });
     } finally {
       setLoading(false);
     }
@@ -49,9 +54,15 @@ const Register = ({ onSuccess }) => {
       </div>
 
       <form onSubmit={handleRegister} className="space-y-3">
-        {alert && (
-          <div className="text-red-500 dark:text-red-400 text-center mb-3">
-            {alert}
+        {alert.message && (
+          <div
+            className={`text-center mb-3 ${
+              alert.success
+                ? "text-green-500 dark:text-green-400"
+                : "text-red-500 dark:text-red-400"
+            }`}
+          >
+            {alert.message}
           </div>
         )}
 
