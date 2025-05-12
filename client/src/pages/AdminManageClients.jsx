@@ -23,9 +23,9 @@ const AdminManageClients = () => {
 
   // Authentification Required as 'admin'
   useMemo(() => {
-    if (!user || user.role !== "admin") {
-      window.location.href = "/";
-    }
+    document.title = "LibriTech - Manage Clients";
+
+    if (!user || user.role !== "admin") window.location.href = "/";
   }, [user]);
 
   // Fetch Users

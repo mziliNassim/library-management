@@ -19,9 +19,8 @@ const AdminManageCategories = () => {
 
   // Authentification Required as 'admin'
   useMemo(() => {
-    if (!user || user.role !== "admin") {
-      window.location.href = "/";
-    }
+    document.title = "LibriTech - Manage Categories";
+    if (!user || user.role !== "admin") window.location.href = "/";
   }, [user]);
 
   // Fetch Categories

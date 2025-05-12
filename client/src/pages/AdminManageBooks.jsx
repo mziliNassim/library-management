@@ -31,6 +31,7 @@ const AdminManageBooks = () => {
 
   // Authentification Required as 'admin'
   useMemo(() => {
+    document.title = "LibriTech - Manage Books";
     if (!user || user.role !== "admin") {
       window.location.href = "/";
     }

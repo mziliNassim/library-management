@@ -72,6 +72,8 @@ const Books = () => {
   };
 
   useEffect(() => {
+    document.title = "LibriTech - Books";
+
     fetchBooks();
     fetchCategories();
   }, [user]);

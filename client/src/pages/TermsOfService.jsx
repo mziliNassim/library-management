@@ -1,4 +1,10 @@
+import { useEffect } from "react";
+
 const TermsOfService = () => {
+  useEffect(() => {
+    document.title = "LibriTech - Terms of Service";
+  }, []);
+
   return (
     <div className="max-w-4xl my-5 mx-auto p-6 ">
       <h1 className="text-3xl font-bold text-purple-800 mb-4 dark:text-purple-400">

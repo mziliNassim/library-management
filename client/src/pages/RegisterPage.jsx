@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -11,6 +12,10 @@ import Register from "../components/Auth/Register.jsx";
 const RegisterPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    document.title = "LibriTech - Authentification";
+  }, []);
 
   const handleRegisterSuccess = (userData) => {
     dispatch(

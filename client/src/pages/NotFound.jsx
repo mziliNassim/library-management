@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
+  useEffect(() => {
+    document.title = "LibriTech - 404";
+  }, []);
+
   return (
     <>
       <section className="bg-white overflow-y-hidden dark:bg-gray-900">

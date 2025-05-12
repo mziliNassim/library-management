@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Lock, EyeClosed, Eye } from "lucide-react";
 import { clientsApiURL } from "../services/api";
@@ -15,6 +15,10 @@ const ResetPassword = () => {
   const [hidPasswordConfirm, setHidPasswordConfirm] = useState(true);
 
   const { token } = useParams();
+
+  useEffect(() => {
+    document.title = "LibriTech - Authentification";
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

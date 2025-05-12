@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   ChevronDown,
   ChevronUp,
@@ -13,6 +13,10 @@ const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    document.title = "LibriTech - FAQ";
+  }, []);
 
   // FAQ categories
   const categories = [

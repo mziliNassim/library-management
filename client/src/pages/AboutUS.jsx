@@ -31,6 +31,7 @@ const AboutUS = () => {
 
   // Handle scroll animation
   useEffect(() => {
+    document.title = "LibriTech - About Us";
     const handleScroll = () => {
       if (window.scrollY > 50) {
         setScrolled(true);

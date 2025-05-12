@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { blogPosts } from "../services/data";
 
@@ -12,6 +12,10 @@ const Blog = () => {
   const { user } = useSelector((state) => state.user);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("All");
+
+  useEffect(() => {
+    document.title = "LibriTech - Blog";
+  }, []);
 
   // Extract unique categories
   const categories = [

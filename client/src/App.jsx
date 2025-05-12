@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 
 import { clearUser, setUser } from "./features/UserSlice.jsx";
 import { setTheme } from "./features/themeSlice.jsx";
@@ -42,7 +43,6 @@ import AdminManageBooksCreate from "./pages/AdminManageBooksCreate.jsx";
 
 import AdminManageCategories from "./pages/AdminManageCategories.jsx";
 import AdminManageCategoriesCreate from "./pages/AdminManageCategoriesCreate.jsx";
-import axios from "axios";
 import { clientsApiURL } from "./services/api.js";
 
 const App = () => {

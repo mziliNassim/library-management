@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   MapPin,
   Phone,
@@ -24,6 +24,10 @@ const ContactUs = () => {
     message: "",
   });
   const [formSubmitted, setFormSubmitted] = useState(false);
+
+  useEffect(() => {
+    document.title = "LibriTech - Contact Us";
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

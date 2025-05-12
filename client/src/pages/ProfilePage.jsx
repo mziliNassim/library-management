@@ -53,6 +53,8 @@ const ProfileEditPage = () => {
 
   // Authentification Required
   useEffect(() => {
+    document.title = "LibriTech - Profile";
+
     if (!user) {
       window.location.href = "/";
     }

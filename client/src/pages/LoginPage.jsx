@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -21,6 +21,10 @@ const LoginPage = () => {
     );
     navigate("/");
   };
+
+  useEffect(() => {
+    document.title = "LibriTech - Authentification";
+  }, []);
 
   const lottieOptions = {
     loop: true,

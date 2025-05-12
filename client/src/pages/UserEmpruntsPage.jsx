@@ -23,9 +23,9 @@ const UserEmpruntsPage = () => {
 
   // Authentification Required
   useMemo(() => {
-    if (!user) {
-      window.location.href = "/";
-    }
+    document.title = "LibriTech - Emprunts";
+
+    if (!user) window.location.href = "/";
   }, [user]);
 
   // Fetch Emprunts

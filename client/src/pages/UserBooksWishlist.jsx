@@ -24,9 +24,9 @@ const UserBooksWishlist = () => {
 
   // Authentification Required
   useMemo(() => {
-    if (!user) {
-      window.location.href = "/";
-    }
+    document.title = "LibriTech - Wishlist";
+
+    if (!user) window.location.href = "/";
   }, [user]);
 
   // Fetch Books

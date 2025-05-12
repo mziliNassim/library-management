@@ -18,6 +18,8 @@ const BooksDetails = () => {
 
   // Fetch book details
   useEffect(() => {
+    document.title = "LibriTech - Book Details";
+
     const fetchBooks = async () => {
       setIsLoading(true);
       try {

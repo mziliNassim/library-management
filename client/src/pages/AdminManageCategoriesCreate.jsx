@@ -21,6 +21,7 @@ const AdminManageCategoriesCreate = () => {
 
   // Authentification Required as 'admin'
   useEffect(() => {
+    document.title = "LibriTech - Manage Categories";
     if (!user || user.role !== "admin") {
       navigate("/");
     } else {

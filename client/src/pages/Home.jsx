@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   BookOpen,
   ChevronRight,
@@ -20,6 +20,10 @@ function Home() {
     backgroundSize: "200%",
     animation: "animate 5s linear infinite",
   };
+
+  useEffect(() => {
+    document.title = "LibriTech - home";
+  }, []);
 
   return (
     <div className="overflow-x-hidden">
