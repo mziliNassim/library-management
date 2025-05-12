@@ -1,34 +1,35 @@
 const { Router } = require("express");
 const router = Router();
-
-const { authenticate, authorize } = require("../middlewares/auth");
+// const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
   getArticles,
-  getArticleByID,
-  createArticle,
-  updateArticle,
+    createArticle,
 } = require("../controllers/blog.controller.js");
 
-
 // @desc    Get all articles
-// @route   POST /api/blog
+// @route   GET /api/blog
 // @access  Client
-router.get("/", authenticate, getArticles);
+router.get("/", getArticles);
 
 // @desc    Get article by ID
-// @route   POST /api/blog
+// @route   GET /api/blog
 // @access  Client
-router.get("/:id", authenticate, getArticleByID);
+// router.get("/:id", getArticleByID);
 
-// @desc    Get article by ID
+// @desc    create article
 // @route   POST /api/blog
 // @access  Client
-router.post("/", authenticate, createArticle);
+router.post("/", createArticle);
 
 // @desc    update article by ID
+// @route   PUT /api/blog/:id
+// @access  Client
+// router.put("/:id",  updateArticle);
+
+// @desc    delete article by ID
 // @route   POST /api/blog
 // @access  Client
-router.put("/:id", authenticate, updateArticle);
+// router.delete("/:id",  deleteArticle);
 
 module.exports = router;

@@ -1,5 +1,6 @@
 import React from "react";
 import { Calendar, User, Tag, Clock, ChevronRight } from "lucide-react";
+import ariclePosterNull from "../../assets/images/blog/ariclePosterNull.jpg";
 
 const FeaturedPost = ({ featuredPost }) => {
   return (
@@ -8,8 +9,8 @@ const FeaturedPost = ({ featuredPost }) => {
         <div className="md:flex">
           <div className="md:w-1/2">
             <img
-              src={featuredPost.image}
-              alt={featuredPost.title}
+              src={featuredPost?.image || ariclePosterNull}
+              alt={featuredPost?.title}
               className="h-64 md:h-full w-full object-cover"
             />
           </div>
@@ -17,31 +18,31 @@ const FeaturedPost = ({ featuredPost }) => {
             <div className="flex items-center mb-3">
               <Tag className="h-4 w-4 text-purple-600 dark:text-purple-400 mr-2" />
               <span className="text-sm font-medium text-purple-600 dark:text-purple-400">
-                {featuredPost.category}
+                {featuredPost?.category}
               </span>
             </div>
             <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4">
-              {featuredPost.title}
+              {featuredPost?.title}
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6">
-              {featuredPost.excerpt}
+              {featuredPost?.excerpt}
             </p>
             <div className="flex items-center mb-6">
               <User className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
               <span className="text-sm text-gray-500 dark:text-gray-400 mr-4">
-                {featuredPost.author}
+                {featuredPost?.author}
               </span>
               <Calendar className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
               <span className="text-sm text-gray-500 dark:text-gray-400 mr-4">
-                {featuredPost.date}
+                {featuredPost?.date}
               </span>
               <Clock className="h-4 w-4 text-gray-500 dark:text-gray-400 mr-2" />
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {featuredPost.readTime}
+                {featuredPost?.readTime}
               </span>
             </div>
             <a
-              href={`/blog/${featuredPost.id}`}
+              href={`/blog/${featuredPost?.id}`}
               className="inline-flex items-center font-medium text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300"
             >
               Read Full Article

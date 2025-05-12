@@ -17,25 +17,17 @@ const blogSchema = new mongoose.Schema({
   },
   author: {
     type: String,
-    required: [true],
+    required: [true, "Author is required"],
     trim: true,
   },
-  date: {
-    type: String,
-    required: [true, "Date is required"],
-    trim: true,
-  },
+  createdAt: { type: Date, default: Date.now },
   category: {
     type: String,
     required: [true, "Category is required"],
     trim: true,
   },
-  readTime: {
-    type: String,
-    required: [true, "Read time is required"],
-    trim: true,
-  },
   image: {
+    // base64 encoded image data
     type: String,
     required: [true, "Image is required"],
   },

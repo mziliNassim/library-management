@@ -11,9 +11,7 @@ const AddArticle = ({ categories }) => {
     excerpt: "",
     author: user?.nom || "",
     category: "",
-    readTime: "",
     image: "",
-    imageFile: null,
   });
 
   const handleImageChange = (e) => {
@@ -21,7 +19,6 @@ const AddArticle = ({ categories }) => {
     if (file) {
       setNewArticle({
         ...newArticle,
-        imageFile: file,
         image: URL.createObjectURL(file),
       });
     }
@@ -31,7 +28,6 @@ const AddArticle = ({ categories }) => {
     setNewArticle({
       ...newArticle,
       image: "",
-      imageFile: null,
     });
   };
 
@@ -45,9 +41,7 @@ const AddArticle = ({ categories }) => {
       excerpt: "",
       author: user?.nom || "",
       category: "",
-      readTime: "",
       image: "",
-      imageFile: null,
     });
   };
 
@@ -139,24 +133,6 @@ const AddArticle = ({ categories }) => {
                           </option>
                         ))}
                     </select>
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      Read Time
-                    </label>
-                    <input
-                      type="text"
-                      value={newArticle.readTime}
-                      onChange={(e) =>
-                        setNewArticle({
-                          ...newArticle,
-                          readTime: e.target.value,
-                        })
-                      }
-                      className="w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white transition-colors"
-                      placeholder="e.g., 5 min read"
-                      required
-                    />
                   </div>
                   <div className="col-span-1 sm:col-span-2">
                     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
