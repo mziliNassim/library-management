@@ -32,6 +32,13 @@ const EditArticle = () => {
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
+  // Authentification Required as 'admin'
+  useEffect(() => {
+    document.title = "LibriTech - Edit Article";
+
+    if (!user || user.role !== "admin") window.location.href = "/";
+  }, [user]);
+
   // Categories - replace with your actual categories or fetch from API
   const categories = location.state?.categories;
 
@@ -74,11 +81,11 @@ const EditArticle = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (
-      !article.title ||
-      !article.excerpt ||
-      !article.image ||
-      !article.category ||
-      !article.author
+      !article?.title ||
+      !article?.excerpt ||
+      !article?.image ||
+      !article?.category ||
+      !article?.author
     ) {
       toast.error("Please fill in all required fields");
       return;
@@ -187,7 +194,7 @@ const EditArticle = () => {
             type="text"
             id="title"
             name="title"
-            value={article.title}
+            value={article?.title}
             onChange={handleInputChange}
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-white"
@@ -205,7 +212,7 @@ const EditArticle = () => {
           <select
             id="category"
             name="category"
-            value={article.category}
+            value={article?.category}
             onChange={handleInputChange}
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-white"
@@ -213,7 +220,7 @@ const EditArticle = () => {
             <option value="" disabled>
               Select a category
             </option>
-            {categories.map((category) => (
+            {categories?.map((category) => (
               <option key={category} value={category}>
                 {category}
               </option>
@@ -233,7 +240,7 @@ const EditArticle = () => {
             type="text"
             id="author"
             name="author"
-            value={article.author}
+            value={article?.author}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-white"
           />
@@ -251,7 +258,7 @@ const EditArticle = () => {
             id="excerpt"
             name="excerpt"
             rows="10"
-            value={article.excerpt}
+            value={article?.excerpt}
             onChange={handleInputChange}
             className="mt-1 block w-full px-3 py-2 border border-gray-300 dark:border-gray-700 rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-white"
           />

@@ -51,16 +51,6 @@ const BlogArticle = () => {
     return new Date(dateString).toLocaleDateString(undefined, options);
   };
 
-  // Calculate reading time (rough estimate)
-  const calculateReadingTime = (content) => {
-    if (!content) return "1 min read";
-    const wordsPerMinute = 200;
-    const text = content.replace(/<[^>]*>/g, ""); // Remove HTML tags
-    const words = text.trim().split(/\s+/).length;
-    const minutes = Math.ceil(words / wordsPerMinute);
-    return `${minutes} min read`;
-  };
-
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
