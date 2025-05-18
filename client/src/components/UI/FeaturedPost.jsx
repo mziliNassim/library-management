@@ -42,7 +42,7 @@ const FeaturedPost = ({ featuredPost }) => {
               </span>
             </div>
             <a
-              href={`/blog/${featuredPost?.id}`}
+              href={`/libritech/blog/${featuredPost?._id}`}
               className="inline-flex items-center font-medium text-purple-600 dark:text-purple-400 hover:text-purple-800 dark:hover:text-purple-300"
             >
               Read Full Article

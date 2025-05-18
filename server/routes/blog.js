@@ -4,7 +4,10 @@ const router = Router();
 
 const {
   getArticles,
-    createArticle,
+  getArticleByID,
+  createArticle,
+  updateArticle,
+  deleteArticle,
 } = require("../controllers/blog.controller.js");
 
 // @desc    Get all articles
@@ -15,7 +18,7 @@ router.get("/", getArticles);
 // @desc    Get article by ID
 // @route   GET /api/blog
 // @access  Client
-// router.get("/:id", getArticleByID);
+router.get("/:id", getArticleByID);
 
 // @desc    create article
 // @route   POST /api/blog
@@ -25,11 +28,11 @@ router.post("/", createArticle);
 // @desc    update article by ID
 // @route   PUT /api/blog/:id
 // @access  Client
-// router.put("/:id",  updateArticle);
+router.put("/:id", updateArticle);
 
 // @desc    delete article by ID
 // @route   POST /api/blog
 // @access  Client
-// router.delete("/:id",  deleteArticle);
+router.delete("/:id", deleteArticle);
 
 module.exports = router;

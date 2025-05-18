@@ -1,10 +1,16 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import axios from "axios";
 import { X, Plus, Image as ImageIcon, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
-const AddArticle = ({ categories }) => {
+import { blogApiURL } from "../../services/api";
+import { compressImage, encodeToBase64 } from "../../utils/Base64.js";
+
+const AddArticle = ({ categories, fetchArticles }) => {
   const { user } = useSelector((state) => state.user);
 
+  const [loading, setLoading] = useState(false);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newArticle, setNewArticle] = useState({
     title: "",
@@ -14,14 +20,10 @@ const AddArticle = ({ categories }) => {
     image: "",
   });
 
-  const handleImageChange = (e) => {
+  const handleImageUpload = async (e) => {
     const file = e.target.files[0];
-    if (file) {
-      setNewArticle({
-        ...newArticle,
-        image: URL.createObjectURL(file),
-      });
-    }
+    const fileBase64 = await encodeToBase64(file);
+    setNewArticle({ ...newArticle, image: fileBase64 });
   };
 
   const handleClearImage = () => {
@@ -31,18 +33,36 @@ const AddArticle = ({ categories }) => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would typically send the data to your backend
-    console.log("New article:", newArticle);
-    setShowAddForm(false);
-    setNewArticle({
-      title: "",
-      excerpt: "",
-      author: user?.nom || "",
-      category: "",
-      image: "",
-    });
+    try {
+      setLoading(true);
+      const { data } = await axios.post(`${blogApiURL}`, newArticle, {
+        headers: {
+          Authorization: `Bearer ${user?.token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      toast.success(data?.message || "Article créé avec succès", {
+        action: { label: "✖️" },
+      });
+      setNewArticle({
+        title: "",
+        excerpt: "",
+        author: user?.nom || "",
+        category: "",
+        image: "",
+      });
+      setShowAddForm(false);
+      fetchArticles();
+    } catch (error) {
+      toast.error(error?.response?.data?.message || "Something went wrong", {
+        action: { label: "✖️" },
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -150,7 +170,7 @@ const AddArticle = ({ categories }) => {
                           <input
                             type="file"
                             accept="image/*"
-                            onChange={handleImageChange}
+                            onChange={handleImageUpload}
                             className="hidden"
                           />
                         </label>

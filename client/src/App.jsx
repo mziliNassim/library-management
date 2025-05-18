@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
+import { Toaster } from "sonner";
+
+import { clientsApiURL } from "./services/api.js";
 
 import { clearUser, setUser } from "./features/UserSlice.jsx";
 import { setTheme } from "./features/themeSlice.jsx";
@@ -19,8 +22,11 @@ import NotFound from "./pages/NotFound.jsx";
 
 import ContactUs from "./pages/ContactUs.jsx";
 import AboutUS from "./pages/AboutUS.jsx";
-import Blog from "./pages/Blog.jsx";
 import FAQ from "./pages/FAQ.jsx";
+
+import Blog from "./pages/Blog.jsx";
+import BlogArticle from "./pages/BlogArticle.jsx";
+import EditArticle from "./pages/EditArticle.jsx";
 
 import Books from "./pages/Books.jsx";
 import BooksDetails from "./pages/BooksDetails.jsx";
@@ -43,7 +49,6 @@ import AdminManageBooksCreate from "./pages/AdminManageBooksCreate.jsx";
 
 import AdminManageCategories from "./pages/AdminManageCategories.jsx";
 import AdminManageCategoriesCreate from "./pages/AdminManageCategoriesCreate.jsx";
-import { clientsApiURL } from "./services/api.js";
 
 const App = () => {
   const { theme } = useSelector((state) => state.theme);
@@ -109,6 +114,7 @@ const App = () => {
           <LoadingApp />
         ) : (
           <>
+            <Toaster theme={theme} />
             <Navbar />
             <Routes>
               <Route path="/" element={<Home />} />
@@ -119,6 +125,8 @@ const App = () => {
                 <Route path="about-us" element={<AboutUS />} />
                 <Route path="contact-us" element={<ContactUs />} />
                 <Route path="blog" element={<Blog />} />
+                <Route path="blog/:id" element={<BlogArticle />} />
+                <Route path="blog/edit/:id" element={<EditArticle />} />
                 <Route path="FAQ" element={<FAQ />} />
               </Route>
 
