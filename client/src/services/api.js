@@ -1,15 +1,14 @@
-// "http://localhost:8888";
+const serverURL =
+  import.meta.env.VITE_ENV === "dev"
+    ? import.meta.env.VITE_SERVER_URL_DEV
+    : import.meta.env.VITE_SERVER_URL_PROD;
 
-export const clientsApiURL =
-  "https://gestion-bibliotique-pfe.netlify.app/api/clients";
+export const clientsApiURL = `${serverURL}/api/clients`;
 
-export const livresApiURL =
-  "https://gestion-bibliotique-pfe.netlify.app/api/livres";
+export const livresApiURL = `${serverURL}/api/livres`;
 
-export const empruntsApiURL =
-  "https://gestion-bibliotique-pfe.netlify.app/api/emprunts";
+export const empruntsApiURL = `${serverURL}/api/emprunts`;
 
-export const categoriesApiURL =
-  "https://gestion-bibliotique-pfe.netlify.app/api/categories";
+export const categoriesApiURL = `${serverURL}/api/categories`;
 
-export const blogApiURL = "http://localhost:8888/api/blog";
+export const blogApiURL = `${serverURL}/api/blog`;

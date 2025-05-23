@@ -69,21 +69,23 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
 
 ### Installation
 
-1. **Cloner le Dépôt**
+> **Cloner le Dépôt**
 
-   ```bash
-   git clone https://github.com/mziliNassim/library-management
-   cd library-management
-   ```
+```bash
+git clone https://github.com/mziliNassim/library-management
+cd library-management
+```
 
-2. **Installer les Dépendances**
+#### Back-End
+
+1. **Installer les Dépendances**
 
    ```bash
    cd server
    npm install
    ```
 
-3. **Configurer les Variables d'Environnement**
+2. **Configurer les Variables d'Environnement**
 
    - Créez un fichier `.env` dans le dossier `server` :
 
@@ -96,7 +98,7 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
      JWT_SECRET=your_jwt_secret_key
      ```
 
-4. **Créez un fichier `netlify.toml` dans le dossier `server` :**
+3. **Créez un fichier `netlify.toml` dans le dossier `server` :**
 
    ```toml
    [build]
@@ -109,7 +111,7 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
       status = 200
    ```
 
-5. **Démarrer le Serveur Back-End**
+4. **Démarrer le Serveur Back-End**
 
    ```bash
    # init netlify in the project directory
@@ -120,9 +122,40 @@ Un système de gestion de bibliothèque full-stack construit avec la stack **MER
    npm run dev
    ```
 
-6. **Accéder à l'Application**
+5. **Accéder à l'Application**
 
    - Back-End : L'API est accessible sur `http://localhost:8888/`.
+
+#### Front-End
+
+1. **Installer les Dépendances**
+
+   ```bash
+   cd client
+   npm install
+   ```
+
+2. **Configurer les Variables d'Environnement**
+
+   - Créez un fichier `.env` dans le dossier `client` :
+
+   ```env
+   VITE_SERVER_URL=your_production_server_url
+
+   VITE_SERVER_URL_DEV=your_development_server_url # http://localhost:8888
+
+   VITE_ENV=dev # dev or prod
+   ```
+
+3. **Démarrer le Serveur Back-End**
+
+   ```bash
+   npm run dev
+   ```
+
+4. **Accéder à l'Application**
+
+   - Front-End sur `http://localhost:5173/`.
 
 ---
 
