@@ -8,14 +8,18 @@
 /server/node_modules
 /server/.gitignore
 /server/.env
+/server/.env
 /server/dist
 /server/tmp
 /server/*.log
 /server/.netlify
 
 
+/client/.env    ← case-sensitive!
+/client/.env.example
+/client/node_modules
+/client/build
+/client/*.log
 /client/.gitignore
-/client/.env
-/Client/node_modules
-/Client/build
-/Client/*.log
+
+.env
