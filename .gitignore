@@ -15,7 +15,7 @@
 
 
 /client/.gitignore
-/clinet/.env
+/client/.env
 /Client/node_modules
 /Client/build
 /Client/*.log
