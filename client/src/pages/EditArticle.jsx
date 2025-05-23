@@ -51,7 +51,12 @@ const EditArticle = () => {
   const fetchArticle = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.get(`${blogApiURL}/${id}`);
+      const { data } = await axios.get(`${blogApiURL}/${id}`, {
+        headers: {
+          Authorization: "Bearer " + user?.token,
+          "Content-Type": "application/json",
+        },
+      });
       setArticle(data.data);
     } catch (error) {
       console.error("Error fetching article:", error);

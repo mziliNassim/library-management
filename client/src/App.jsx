@@ -61,7 +61,7 @@ const App = () => {
     const checkLocalStorage = async () => {
       setLoading(true);
       // check local storage for user
-      const user = localStorage.getItem("user");
+      const user = await localStorage.getItem("user");
       if (user) {
         // Valid Token
         const parsedUser = JSON.parse(user);

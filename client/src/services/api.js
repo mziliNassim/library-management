@@ -12,5 +12,4 @@ export const empruntsApiURL =
 export const categoriesApiURL =
   "https://gestion-bibliotique-pfe.netlify.app/api/categories";
 
-export const blogApiURL =
-  "https://gestion-bibliotique-pfe.netlify.app/api/blog";
+export const blogApiURL = "http://localhost:8888/api/blog";

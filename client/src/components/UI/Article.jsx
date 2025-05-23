@@ -27,7 +27,12 @@ const Article = ({ post, fetchArticles, categories }) => {
   const handleDelete = async () => {
     try {
       setLoading(true);
-      const { data } = await axios.delete(`${blogApiURL}/${post?._id}`);
+      const { data } = await axios.delete(`${blogApiURL}/${post?._id}`, {
+        headers: {
+          Authorization: "Bearer " + user?.token,
+          "Content-Type": "application/json",
+        },
+      });
       toast.success(data?.message || "Article deleted successfully", {
         action: { label: "✖️" },
       });

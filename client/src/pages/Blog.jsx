@@ -30,9 +30,9 @@ const Blog = () => {
           "Content-Type": "application/json",
         },
       });
-      setArticles(data?.data);
+      setArticles(data?.data || []);
     } catch (error) {
-      console.log(" fetcsetalerthArticles ~ error:", error);
+      console.log("fetchArticles ~ error:", error);
       toast.error(
         error?.response?.data?.message || "Error while fetching data",
         { action: { label: "✖️" } }
@@ -48,28 +48,40 @@ const Blog = () => {
 
   useEffect(() => {
     document.title = "LibriTech - Blog";
-
     fetchArticles();
   }, []);
 
-  // Extract unique categories
+  // Extract unique categories - fixed to handle possible undefined values
   const categories = [
     "All",
-    ...new Set(articles?.map((post) => post.category)),
+    ...new Set(
+      articles?.filter((post) => post?.category).map((post) => post.category)
+    ),
   ];
 
-  // Filter posts based on search and category
+  // Filter posts based on search and category - improved filtering logic
   const filteredPosts = articles?.filter((post) => {
+    // Make sure we have the needed fields for proper filtering
+    if (!post || !post.title || !post.excerpt) return false;
+
     const matchesSearch =
+      searchQuery.trim() === "" ||
       post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+
     const matchesCategory =
       activeCategory === "All" || post.category === activeCategory;
+
     return matchesSearch && matchesCategory;
   });
 
   // Featured post (first one in the filtered list marked as featured)
   const featuredPost = articles?.find((post) => post.featured);
+
+  // Non-featured filtered posts for display in the grid
+  const regularPosts = filteredPosts?.filter((post) =>
+    featuredPost ? post._id !== featuredPost._id : true
+  );
 
   return (
     <div className="bg-gray-50 dark:bg-gray-900 min-h-screen">
@@ -99,25 +111,32 @@ const Blog = () => {
         </div>
       ) : (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          {/* Featured Post */}
-          {featuredPost && <FeaturedPost featuredPost={featuredPost} />}
+          {/* Featured Post - Only show if it matches current filter criteria */}
+          {featuredPost &&
+            (activeCategory === "All" ||
+              featuredPost.category === activeCategory) &&
+            (searchQuery.trim() === "" ||
+              featuredPost.title
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase()) ||
+              featuredPost.excerpt
+                .toLowerCase()
+                .includes(searchQuery.toLowerCase())) && (
+              <FeaturedPost featuredPost={featuredPost} />
+            )}
 
           {/* Blog Post Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 lg:col-span-2 gap-8">
-              {filteredPosts.length > 0 ? (
-                filteredPosts.map((post) => {
-                  if (post._id !== filteredPosts[0]._id) {
-                    return (
-                      <Article
-                        key={post._id}
-                        post={post}
-                        fetchArticles={fetchArticles}
-                        categories={categories}
-                      />
-                    );
-                  }
-                })
+              {regularPosts && regularPosts.length > 0 ? (
+                regularPosts.map((post) => (
+                  <Article
+                    key={post._id}
+                    post={post}
+                    fetchArticles={fetchArticles}
+                    categories={categories}
+                  />
+                ))
               ) : (
                 <div className="col-span-3 py-12 text-center">
                   <BookOpen className="h-16 w-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" />

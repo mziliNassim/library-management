@@ -14,9 +14,12 @@ import {
 } from "lucide-react";
 import { blogApiURL } from "../services/api";
 import ariclePosterNull from "../assets/images/blog/ariclePosterNull.jpg";
+import { useSelector } from "react-redux";
 
 const BlogArticle = () => {
+  const { user } = useSelector((state) => state.user);
   const { id } = useParams();
+
   const [article, setArticle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,11 +28,14 @@ const BlogArticle = () => {
     const fetchArticle = async () => {
       try {
         setLoading(true);
-        const { data } = await axios.get(`${blogApiURL}/${id}`);
+        const { data } = await axios.get(`${blogApiURL}/${id}`, {
+          headers: {
+            Authorization: "Bearer " + user?.token,
+            "Content-Type": "application/json",
+          },
+        });
         setArticle(data.data);
-        console.log(" fetchArticle ~ data.data:", data.data);
       } catch (error) {
-        console.error("Error fetching article:", error);
         setError(error?.response?.data?.message || "Failed to load article");
         toast.error("Failed to load article", {
           action: { label: "✖️" },
