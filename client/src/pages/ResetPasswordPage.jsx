@@ -5,8 +5,8 @@ import { clientsApiURL } from "../services/api";
 import axios from "axios";
 
 const ResetPassword = () => {
-  const [password, setPassword] = useState("Nassim123");
-  const [confirmPassword, setConfirmPassword] = useState("Nassim123");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [alert, setAlert] = useState({ message: "", success: "" });
   const [isSuccess, setIsSuccess] = useState(false);
@@ -31,7 +31,7 @@ const ResetPassword = () => {
     }
 
     try {
-      await axios.post(
+      const { data } = await axios.post(
         `${clientsApiURL}/reset-password/${token}`,
         { password },
         {
@@ -41,6 +41,7 @@ const ResetPassword = () => {
         }
       );
 
+      // console.log(" handleSubmit ~ data:", data);
       setIsSuccess(true);
       setPassword("");
       setConfirmPassword("");
@@ -49,6 +50,7 @@ const ResetPassword = () => {
         message: error.response?.data?.message || "",
         success: false,
       });
+      console.log(" handleSubmit ~ error.response:", error.response);
     } finally {
       setIsLoading(false);
     }
