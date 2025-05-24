@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const router = Router();
-// const { authenticate, authorize } = require("../middlewares/auth");
+
+const { authenticate, authorize } = require("../middlewares/auth");
 
 const {
   getArticles,
@@ -12,27 +13,27 @@ const {
 
 // @desc    Get all articles
 // @route   GET /api/blog
-// @access  Client
+// @access  Public
 router.get("/", getArticles);
 
 // @desc    Get article by ID
-// @route   GET /api/blog
-// @access  Client
+// @route   GET /api/blog/:id
+// @access  Public
 router.get("/:id", getArticleByID);
 
 // @desc    create article
 // @route   POST /api/blog
-// @access  Client
-router.post("/", createArticle);
+// @access  Admin
+router.post("/", authenticate, authorize(["admin"]), createArticle);
 
 // @desc    update article by ID
 // @route   PUT /api/blog/:id
-// @access  Client
-router.put("/:id", updateArticle);
+// @access  Admin
+router.put("/:id", authenticate, authorize(["admin"]), updateArticle);
 
 // @desc    delete article by ID
 // @route   POST /api/blog
-// @access  Client
-router.delete("/:id", deleteArticle);
+// @access  Admin
+router.delete("/:id", authenticate, authorize(["admin"]), deleteArticle);
 
 module.exports = router;

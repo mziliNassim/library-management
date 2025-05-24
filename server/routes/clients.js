@@ -24,8 +24,8 @@ const {
 } = require("../controllers/clients.controller");
 
 // ! ========== Token Validation ==========
-// @desc
-// @route   get /api/clients/validToken
+// @desc    Token Validation
+// @route   get /api/clients/validToken/:token
 // @access  Public
 router.get("/validToken/:token", tokenAuthorize);
 
@@ -46,14 +46,14 @@ router.post("/login", login);
 // @access  Client
 router.post("/logout", authenticate, logout);
 
-// @desc
+// @desc    Forgot Password
 // @route   POST /api/clients/forgot-password
-// @access  Client
+// @access  Public
 router.post("/forgot-password", forgotPassword);
 
-// @desc
+// @desc    Reset Password
 // @route   POST /api/clients/reset-password/:token
-// @access  Client
+// @access  Public
 router.post("/reset-password/:token", resetPassword);
 
 // ! ========== Profile ==========
