@@ -62,10 +62,11 @@ clientSchema.methods.matchPassword = async function (
 // Hash the password before saving only if it's modified
 clientSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
     if (!passwordRegex.test(this.password)) {
       throw new Error(
-        "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number."
+        "* Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number."
       );
     }
     this.password = await bcrypt.hash(this.password, 10);

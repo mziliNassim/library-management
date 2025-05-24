@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Lock, EyeClosed, Eye } from "lucide-react";
 import { clientsApiURL } from "../services/api";
 import axios from "axios";
+import { toast } from "sonner";
 
 const ResetPassword = () => {
   const [password, setPassword] = useState("");
@@ -41,16 +42,17 @@ const ResetPassword = () => {
         }
       );
 
-      // console.log(" handleSubmit ~ data:", data);
       setIsSuccess(true);
       setPassword("");
+      navigate("/auth/signin");
       setConfirmPassword("");
-    } catch (error) {
-      setAlert({
-        message: error.response?.data?.message || "",
-        success: false,
+      toast.success(data?.message || "", {
+        action: { label: "✖️" },
       });
-      console.log(" handleSubmit ~ error.response:", error.response);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "", {
+        action: { label: "✖️" },
+      });
     } finally {
       setIsLoading(false);
     }
