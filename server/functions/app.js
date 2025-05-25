@@ -13,7 +13,9 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 dotenv.config();
 
 // Routes
-app.use("/", require("../routes/endpoint.js"));
+app.get("/", (req, res) =>
+  res.json({ success: true, message: "API is running...!" })
+);
 
 app.use("/api/livres", require("../routes/livres"));
 app.use("/api/clients", require("../routes/clients"));
