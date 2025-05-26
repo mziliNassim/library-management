@@ -63,7 +63,7 @@ clientSchema.methods.matchPassword = async function (
 clientSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-    if (!passwordRegex.test(password)) {
+    if (!passwordRegex.test(this.password)) {
       throw new Error(
         "Password must contain at least 8 characters, one uppercase letter, one lowercase letter, and one number."
       );
