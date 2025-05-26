@@ -1,5 +1,4 @@
 const crypto = require("crypto");
-const bcrypt = require("bcryptjs");
 
 const Client = require("../models/Client");
 const Emprunt = require("../models/Emprunt");
@@ -132,7 +131,7 @@ const forgotPassword = async (req, res) => {
   try {
     const client = await Client.findOne({ email });
     if (!client) {
-      return res.status(500).json({
+      return res.status(400).json({
         success: false,
         message: "Invalid email address!",
         data: null,
@@ -178,8 +177,9 @@ const resetPassword = async (req, res) => {
 
     if (!client) {
       return res.status(400).json({
-        state: "warning",
+        success: false,
         message: "Invalid or expired reset link",
+        data: null,
       });
     }
 
@@ -193,6 +193,7 @@ const resetPassword = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Password reset successfully",
+      data: null,
     });
   } catch (error) {
     return res
