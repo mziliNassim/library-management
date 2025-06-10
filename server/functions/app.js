@@ -41,4 +41,9 @@ const handler = async (req, res) => {
   return app(req, res);
 };
 
+const port = process.env.PORT;
+app.listen(port, () => {
+  console.log(`server run on port ${port}`);
+});
+
 module.exports.handler = serverless(handler);

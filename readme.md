@@ -90,13 +90,22 @@ cd library-management
    - Créez un fichier `.env` dans le dossier `server` :
 
      ```env
-     PORT=5000
+     PORT=8888
 
      # MONGO_URI=your_mongodb_connection_uri
      MONGO_URI=mongodb://localhost:27017/bibliotheque
 
      JWT_SECRET=your_jwt_secret_key
      ```
+
+##### run server node
+
+```bash
+# "scripts" : { "start": "node functions/app.js" }
+npm run start
+```
+
+##### run server using netlify
 
 3. **Créez un fichier `netlify.toml` dans le dossier `server` :**
 

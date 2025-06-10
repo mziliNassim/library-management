@@ -4,6 +4,7 @@
   "description": "",
   "main": "app.js",
   "scripts": {
+    "start": "node functions/app.js",
     "dev": "netlify dev",
     "host": "netlify deploy --prod"
   },
